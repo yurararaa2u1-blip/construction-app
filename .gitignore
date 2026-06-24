@@ -1,0 +1,17 @@
+# 環境変数ファイル（パスワード・APIキーなどの秘密情報）
+# 絶対にGitHubにアップしてはいけない
+.env
+
+# Node.jsのパッケージフォルダ
+# 容量が大きいため除外する（npm installで再作成できるため不要）
+node_modules/
+
+# ログファイル
+*.log
+npm-debug.log*
+
+# OSが自動生成するファイル（Macの場合）
+.DS_Store
+
+# VSCodeの設定ファイル
+.vscode/
