@@ -47,6 +47,10 @@ app.use(express.json());
 // ルーティングの設定
 // ========================================
 
+// 認証API: /api/auth/register, /api/auth/login, /api/auth/me
+const authRouter = require('./routes/auth');
+app.use('/api/auth', authRouter);
+
 // ヘルスチェック用エンドポイント
 // GET /health にアクセスするとサーバーが正常に動いているか確認できる
 // 例）curl http://localhost:3000/health
