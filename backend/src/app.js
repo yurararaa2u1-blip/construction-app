@@ -13,6 +13,12 @@ const express = require('express');
 // 例）フロントが http://localhost:5173 、バックエンドが http://localhost:3000 の場合に必要
 const cors = require('cors');
 
+// ========================================
+// データベース接続の初期化
+// ========================================
+// このファイルを読み込んだ時点で PostgreSQL への接続プールが作られ、接続確認が実行される
+require('./models/db');
+
 // Expressアプリケーションのインスタンスを作成する
 // 以降、app.get() や app.use() でルートやミドルウェアを登録していく
 const app = express();
