@@ -51,6 +51,9 @@ app.use(express.json());
 const authRouter = require('./routes/auth');
 app.use('/api/auth', authRouter);
 
+const projectsRouter = require('./routes/projects');
+app.use('/api/projects', projectsRouter);
+
 // ヘルスチェック用エンドポイント
 // GET /health にアクセスするとサーバーが正常に動いているか確認できる
 // 例）curl http://localhost:3000/health
