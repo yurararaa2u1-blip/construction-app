@@ -1,0 +1,501 @@
+/* ========================================
+   建築工事工程管理アプリ - 共通スタイル
+   ======================================== */
+
+/* リセット・ベース */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+  font-size: 14px;
+  color: #333;
+  background-color: #f4f6f8;
+  line-height: 1.6;
+}
+
+/* ========================================
+   ヘッダー（ネイビー共通ヘッダー）
+   ======================================== */
+.app-header {
+  background-color: #1e3a5f;
+  color: #fff;
+  padding: 0 24px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.app-header .header-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #fff;
+  text-decoration: none;
+}
+
+.app-header .header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ========================================
+   メインコンテンツエリア
+   ======================================== */
+.page-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.page-container-narrow {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+/* ========================================
+   カード（フォームや一覧を囲む白いボックス）
+   ======================================== */
+.card {
+  background: #fff;
+  border-radius: 6px;
+  border: 1px solid #dde2e8;
+  padding: 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* ========================================
+   ページタイトル
+   ======================================== */
+.page-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e3a5f;
+  margin-bottom: 24px;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+/* ========================================
+   ボタン
+   ======================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.15s, opacity 0.15s;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* プライマリ（青） */
+.btn-primary {
+  background-color: #1e3a5f;
+  color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #16304f;
+}
+
+/* セカンダリ（グレーアウトライン） */
+.btn-secondary {
+  background-color: #fff;
+  color: #1e3a5f;
+  border: 1px solid #1e3a5f;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #f0f4f8;
+}
+
+/* デンジャー（赤） */
+.btn-danger {
+  background-color: #c0392b;
+  color: #fff;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background-color: #a93226;
+}
+
+/* 幅いっぱい */
+.btn-block {
+  width: 100%;
+}
+
+/* ボタン間のスペース */
+.btn-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ========================================
+   フォーム
+   ======================================== */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 9px 12px;
+  font-size: 14px;
+  border: 1px solid #ccd0d5;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  appearance: none;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #1e3a5f;
+  box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.12);
+}
+
+.form-input[type="date"] {
+  cursor: pointer;
+}
+
+/* ========================================
+   エラーメッセージ
+   ======================================== */
+.error-message {
+  background-color: #fdf3f2;
+  border: 1px solid #e74c3c;
+  border-left: 4px solid #e74c3c;
+  border-radius: 4px;
+  color: #c0392b;
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+/* ========================================
+   ログイン・登録ページ用レイアウト
+   ======================================== */
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f4f6f8;
+  padding: 24px;
+}
+
+.auth-logo {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e3a5f;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  background: #fff;
+  border-radius: 6px;
+  border: 1px solid #dde2e8;
+  padding: 36px 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.auth-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e3a5f;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.auth-footer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 13px;
+  color: #666;
+}
+
+.auth-footer a {
+  color: #1e3a5f;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ========================================
+   テーブル（現場一覧）
+   ======================================== */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.data-table th {
+  background-color: #f0f4f8;
+  color: #444;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 10px 16px;
+  text-align: left;
+  border-bottom: 2px solid #dde2e8;
+}
+
+.data-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #eaedf0;
+  color: #333;
+  vertical-align: middle;
+}
+
+.data-table tbody tr {
+  cursor: pointer;
+  transition: background-color 0.1s;
+}
+
+.data-table tbody tr:hover {
+  background-color: #f0f4f8;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table-link {
+  color: #1e3a5f;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.table-link:hover {
+  text-decoration: underline;
+}
+
+.empty-message {
+  text-align: center;
+  color: #888;
+  padding: 40px 0;
+  font-size: 14px;
+}
+
+/* ========================================
+   成功メッセージ
+   ======================================== */
+.success-message {
+  background-color: #eafaf1;
+  border: 1px solid #27ae60;
+  border-left: 4px solid #27ae60;
+  border-radius: 4px;
+  color: #1e8449;
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+/* ========================================
+   タスクリスト
+   ======================================== */
+.task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 4px;
+  border-bottom: 1px solid #f0f0f0;
+  gap: 8px;
+}
+
+.task-item:last-child {
+  border-bottom: none;
+}
+
+.task-item--done .task-title {
+  text-decoration: line-through;
+  color: #aaa;
+}
+
+.task-check-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  flex: 1;
+  min-width: 0;
+}
+
+.task-checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+  accent-color: #1e3a5f;
+}
+
+.task-title {
+  font-size: 14px;
+  color: #333;
+  word-break: break-all;
+}
+
+.task-due {
+  font-size: 12px;
+  color: #888;
+  white-space: nowrap;
+}
+
+.task-section-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 16px 0 8px;
+}
+
+.btn-task-delete {
+  background: none;
+  border: none;
+  color: #bbb;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: color 0.15s, background-color 0.15s;
+}
+
+.btn-task-delete:hover {
+  color: #c0392b;
+  background-color: #fdf3f2;
+}
+
+/* ========================================
+   区切り線
+   ======================================== */
+.divider {
+  border: none;
+  border-top: 1px solid #eaedf0;
+  margin: 24px 0;
+}
+
+/* ========================================
+   ローディング
+   ======================================== */
+.loading {
+  text-align: center;
+  color: #888;
+  padding: 60px 0;
+}
+
+/* ========================================
+   レスポンシブ対応
+   ======================================== */
+@media (max-width: 600px) {
+  .page-container,
+  .page-container-narrow {
+    padding: 16px;
+  }
+
+  .card,
+  .auth-card {
+    padding: 24px 16px;
+  }
+
+  .app-header {
+    padding: 0 16px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  /* テーブルをスマホ用にスタック表示 */
+  .data-table thead {
+    display: none;
+  }
+
+  .data-table tbody tr {
+    display: block;
+    border: 1px solid #dde2e8;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    padding: 4px 0;
+  }
+
+  .data-table td {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 8px 16px;
+  }
+
+  .data-table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: #555;
+    font-size: 12px;
+    margin-right: 8px;
+    white-space: nowrap;
+  }
+
+  .data-table td:last-child {
+    border-bottom: none;
+  }
+
+  .btn-group {
+    flex-direction: column;
+  }
+}

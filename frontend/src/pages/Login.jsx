@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import client from '../api/client';
+import '../styles.css';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -10,31 +11,55 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
     try {
       const res = await client.post('/api/auth/login', { email, password });
       localStorage.setItem('token', res.data.token);
       navigate('/projects');
     } catch (err) {
-      setError('メールアドレスまたはパスワードが正しくありません');
+      if (err.response?.status === 401) {
+        setError('メールアドレスまたはパスワードが正しくありません');
+      } else {
+        setError('サーバーエラーが発生しました。しばらくしてから再試行してください');
+      }
     }
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: '100px auto', padding: 24 }}>
-      <h2>ログイン</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>メールアドレス</label><br />
-          <input type="email" value={email} onChange={e => setEmail(e.target.value)} required style={{ width: '100%', marginBottom: 12 }} />
+    <div className="auth-wrapper">
+      <div className="auth-logo">建築工事工程管理システム</div>
+      <div className="auth-card">
+        <h1 className="auth-title">ログイン</h1>
+        {error && <div className="error-message">{error}</div>}
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label className="form-label">メールアドレス</label>
+            <input
+              type="email"
+              className="form-input"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+              placeholder="example@company.com"
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">パスワード</label>
+            <input
+              type="password"
+              className="form-input"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+              placeholder="パスワードを入力"
+            />
+          </div>
+          <button type="submit" className="btn btn-primary btn-block">ログイン</button>
+        </form>
+        <div className="auth-footer">
+          <Link to="/register">新規アカウント登録はこちら</Link>
         </div>
-        <div>
-          <label>パスワード</label><br />
-          <input type="password" value={password} onChange={e => setPassword(e.target.value)} required style={{ width: '100%', marginBottom: 12 }} />
-        </div>
-        <button type="submit" style={{ width: '100%' }}>ログイン</button>
-      </form>
-      <p><Link to="/register">新規登録はこちら</Link></p>
+      </div>
     </div>
   );
 }
