@@ -439,6 +439,378 @@ body {
 }
 
 /* ========================================
+   アプリ全体レイアウト（サイドバー付き）
+   ======================================== */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.layout-body {
+  display: flex;
+  flex: 1;
+}
+
+.sidebar {
+  width: 210px;
+  background: #1e3a5f;
+  flex-shrink: 0;
+  position: sticky;
+  top: 56px;
+  height: calc(100vh - 56px);
+  overflow-y: auto;
+  padding: 12px 0;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 20px;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.15s, color 0.15s;
+  border-left: 3px solid transparent;
+}
+
+.sidebar-link:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.sidebar-link.active {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  font-weight: 700;
+  border-left-color: #fff;
+}
+
+.sidebar-icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.layout-main {
+  flex: 1;
+  padding: 28px 32px;
+  overflow-x: hidden;
+  min-width: 0;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.header-username {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ========================================
+   ダッシュボード サマリーカード
+   ======================================== */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.summary-card {
+  background: #fff;
+  border-radius: 6px;
+  border: 1px solid #dde2e8;
+  padding: 20px 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.summary-card-label {
+  font-size: 11px;
+  color: #888;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+
+.summary-card-value {
+  font-size: 30px;
+  font-weight: 700;
+  color: #1e3a5f;
+  line-height: 1;
+}
+
+.summary-card-value.danger  { color: #c0392b; }
+.summary-card-value.success { color: #27ae60; }
+.summary-card-value.warning { color: #d35400; }
+
+/* ========================================
+   ステータス・ロールバッジ
+   ======================================== */
+.badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.badge-planning    { background: #ebf3ff; color: #2980b9; }
+.badge-in_progress { background: #e8f8f0; color: #1e8449; }
+.badge-on_hold     { background: #fdf6e3; color: #b7770d; }
+.badge-completed   { background: #f0f0f0; color: #666; }
+.badge-delayed     { background: #fdf3f2; color: #c0392b; }
+
+.role-badge { display: inline-block; padding: 2px 9px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+.role-admin      { background: #1e3a5f; color: #fff; }
+.role-supervisor { background: #2980b9; color: #fff; }
+.role-viewer     { background: #f0f0f0; color: #555; }
+
+/* ========================================
+   ガントチャート
+   ======================================== */
+.gantt-wrapper {
+  overflow-x: auto;
+  border: 1px solid #dde2e8;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.gantt-table {
+  min-width: 720px;
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.gantt-name-col {
+  width: 200px;
+}
+
+.gantt-th-name {
+  width: 200px;
+  padding: 8px 14px;
+  background: #f0f4f8;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #555;
+  border-bottom: 2px solid #dde2e8;
+  border-right: 1px solid #dde2e8;
+  text-align: left;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+
+.gantt-th-timeline {
+  padding: 0;
+  background: #f0f4f8;
+  border-bottom: 2px solid #dde2e8;
+  position: relative;
+}
+
+.gantt-month-row {
+  display: flex;
+  width: 100%;
+  height: 28px;
+  border-bottom: 1px solid #dde2e8;
+  position: relative;
+}
+
+.gantt-month-cell {
+  flex-shrink: 0;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: #666;
+  border-right: 1px solid #dde2e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.gantt-td-name {
+  padding: 8px 14px;
+  border-bottom: 1px solid #eaedf0;
+  border-right: 1px solid #dde2e8;
+  font-size: 13px;
+  color: #333;
+  position: sticky;
+  left: 0;
+  background: #fff;
+  z-index: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gantt-td-name.delayed {
+  color: #c0392b;
+  background: #fff8f8;
+}
+
+.gantt-td-timeline {
+  padding: 0;
+  border-bottom: 1px solid #eaedf0;
+  position: relative;
+  height: 44px;
+}
+
+.gantt-bar {
+  position: absolute;
+  top: 8px;
+  height: 28px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  min-width: 4px;
+  cursor: default;
+}
+
+.gantt-bar--normal      { background: #2980b9; }
+.gantt-bar--delayed     { background: #c0392b; }
+.gantt-bar--completed   { background: #27ae60; }
+.gantt-bar--not-started { background: #b0bec5; }
+
+.gantt-today-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(231, 76, 60, 0.7);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.gantt-today-line::before {
+  content: '今日';
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  font-size: 9px;
+  color: #e74c3c;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.gantt-progress-cell {
+  width: 110px;
+  padding: 0 12px;
+  border-bottom: 1px solid #eaedf0;
+  border-left: 1px solid #dde2e8;
+  vertical-align: middle;
+}
+
+.gantt-th-progress {
+  width: 110px;
+  padding: 8px 12px;
+  background: #f0f4f8;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #555;
+  border-bottom: 2px solid #dde2e8;
+  border-left: 1px solid #dde2e8;
+  text-align: left;
+}
+
+/* ========================================
+   通知リスト
+   ======================================== */
+.notification-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.notification-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  border-bottom: 1px solid #eaedf0;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.notification-item:hover { background: #f8f9fa; }
+
+.notification-item.unread { background: #fffdf5; }
+
+.notification-item:last-child { border-bottom: none; }
+
+.notification-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e67e22;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+.notification-dot.hidden { visibility: hidden; }
+
+.notification-body { flex: 1; min-width: 0; }
+
+.notification-type-tag {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 3px;
+}
+
+.tag-delay    { color: #c0392b; }
+.tag-reminder { color: #2980b9; }
+.tag-info     { color: #27ae60; }
+
+.notification-message { font-size: 13px; color: #333; margin-bottom: 4px; }
+.notification-meta    { font-size: 11px; color: #999; }
+
+/* ========================================
+   フィルタータブ
+   ======================================== */
+.filter-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid #dde2e8;
+  margin-bottom: 0;
+}
+
+.filter-tab {
+  padding: 9px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #888;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.15s;
+}
+
+.filter-tab.active        { color: #1e3a5f; border-bottom-color: #1e3a5f; }
+.filter-tab:hover:not(.active) { color: #444; }
+
+/* ========================================
    レスポンシブ対応
    ======================================== */
 @media (max-width: 600px) {

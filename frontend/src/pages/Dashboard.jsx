@@ -18,35 +18,73 @@ const STATUS_BADGE = {
   completed:   'badge badge-completed',
 };
 
-function ProjectList() {
+function Dashboard() {
   const [projects, setProjects] = useState([]);
+  const [loading, setLoading]   = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    client.get('/api/projects').then(res => {
-      const data = res.data;
-      setProjects(Array.isArray(data) ? data : Array.isArray(data.projects) ? data.projects : []);
-    }).catch(() => {});
+    client.get('/api/projects')
+      .then(res => {
+        const data = res.data;
+        setProjects(Array.isArray(data) ? data : Array.isArray(data.projects) ? data.projects : []);
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
+
+  // サマリー計算
+  const total      = projects.length;
+  const delayed    = projects.filter(p => p.is_delayed).length;
+  const completed  = projects.filter(p => p.status === 'completed').length;
+  const avgProgress = total > 0
+    ? Math.round(projects.reduce((sum, p) => sum + (p.progress || 0), 0) / total)
+    : 0;
 
   return (
     <Layout>
       <div className="page-header">
-        <h1 className="page-title">現場一覧</h1>
-        <button className="btn btn-primary" onClick={() => navigate('/projects/new')}>
-          ＋ 新規作成
-        </button>
+        <h1 className="page-title">ダッシュボード</h1>
       </div>
 
+      {/* サマリーカード */}
+      <div className="summary-grid">
+        <div className="summary-card">
+          <div className="summary-card-label">総現場数</div>
+          <div className="summary-card-value">{total}</div>
+        </div>
+        <div className="summary-card">
+          <div className="summary-card-label">遅延中</div>
+          <div className={`summary-card-value${delayed > 0 ? ' danger' : ''}`}>{delayed}</div>
+        </div>
+        <div className="summary-card">
+          <div className="summary-card-label">完了</div>
+          <div className="summary-card-value success">{completed}</div>
+        </div>
+        <div className="summary-card">
+          <div className="summary-card-label">平均進捗</div>
+          <div className="summary-card-value">{avgProgress}<span style={{ fontSize: 16, fontWeight: 400 }}>%</span></div>
+        </div>
+      </div>
+
+      {/* 現場一覧テーブル */}
       <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-        {projects.length === 0 ? (
+        <div style={{ padding: '16px 24px', borderBottom: '1px solid #eaedf0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h2 style={{ fontSize: 15, fontWeight: 700, color: '#1e3a5f', margin: 0 }}>現場一覧</h2>
+          <button className="btn btn-primary" style={{ padding: '6px 16px', fontSize: 13 }} onClick={() => navigate('/projects')}>
+            すべて見る
+          </button>
+        </div>
+
+        {loading ? (
+          <p className="loading">読み込み中...</p>
+        ) : projects.length === 0 ? (
           <p className="empty-message">現場がまだ登録されていません</p>
         ) : (
           <table className="data-table">
             <thead>
               <tr>
                 <th>現場名</th>
-                <th>住所</th>
                 <th>工期終了日</th>
                 <th>進捗</th>
                 <th>ステータス</th>
@@ -57,7 +95,6 @@ function ProjectList() {
               {projects.map(p => (
                 <tr key={p.id} onClick={() => navigate(`/projects/${p.id}`)}>
                   <td data-label="現場名" style={{ fontWeight: 600 }}>{p.name}</td>
-                  <td data-label="住所">{p.address || '—'}</td>
                   <td data-label="工期終了日">{p.end_date ? p.end_date.slice(0, 10) : '—'}</td>
                   <td data-label="進捗">
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 120 }}>
@@ -78,7 +115,9 @@ function ProjectList() {
                     </span>
                   </td>
                   <td data-label="遅延">
-                    {p.is_delayed && <span className="badge badge-delayed">遅延中</span>}
+                    {p.is_delayed && (
+                      <span className="badge badge-delayed">遅延中</span>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -90,4 +129,4 @@ function ProjectList() {
   );
 }
 
-export default ProjectList;
+export default Dashboard;

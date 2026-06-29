@@ -54,10 +54,16 @@ app.use('/api/auth', authRouter);
 const projectsRouter = require('./routes/projects');
 app.use('/api/projects', projectsRouter);
 
-// タスクAPI（PUT/DELETE /api/tasks/:id）
+// タスクAPI（PATCH/DELETE /api/tasks/:taskId）
 // GET/POST /api/projects/:id/tasks は routes/projects.js 内でネスト登録済み
 const { taskRouter } = require('./routes/tasks');
 app.use('/api/tasks', taskRouter);
+
+const usersRouter = require('./routes/users');
+app.use('/api/users', usersRouter);
+
+const notificationsRouter = require('./routes/notifications');
+app.use('/api/notifications', notificationsRouter);
 
 // ヘルスチェック用エンドポイント
 // GET /health にアクセスするとサーバーが正常に動いているか確認できる

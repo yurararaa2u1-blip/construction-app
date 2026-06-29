@@ -1,61 +1,45 @@
 // ========================================
 // 建築工事工程管理アプリ - 認証ミドルウェア
 // ========================================
-// ミドルウェア: ルートの処理が実行される「前」に割り込んで動く関数
-// ここでは「JWTトークンが正しいか」を検証し、問題なければ次の処理へ進める
+const jwt  = require('jsonwebtoken');
+const pool = require('../models/db');
 
-// jsonwebtoken: JWTトークンの検証に使う
-const jwt = require('jsonwebtoken');
-
-// ========================================
-// JWT認証ミドルウェア
-// ========================================
-// 使い方: router.get('/me', authMiddleware, getMe)
-//         ↑ authMiddleware を挟むと、getMe の前にトークン検証が走る
-const authMiddleware = (req, res, next) => {
-  // ---- Authorizationヘッダーからトークンを取り出す ----
-  // フロントエンドは以下の形式でトークンを送ってくる:
-  //   Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
-  // "Bearer " の部分を除いた後ろ側がJWTトークン本体
+const authMiddleware = async (req, res, next) => {
   const authHeader = req.headers['authorization'];
 
-  // ヘッダー自体が存在しない場合 → 401 Unauthorized
   if (!authHeader) {
-    return res.status(401).json({ message: '認証トークンがありません' });
+    return res.status(401).json({ error: 'Unauthorized', message: '認証トークンがありません', statusCode: 401 });
   }
 
-  // "Bearer <トークン>" の形式を確認し、トークン部分だけ取り出す
-  // split(' ') → ['Bearer', 'eyJ...'] に分割
-  // [1] → インデックス1番目（トークン本体）を取得
   const parts = authHeader.split(' ');
   if (parts.length !== 2 || parts[0] !== 'Bearer') {
-    return res.status(401).json({ message: 'トークンの形式が正しくありません（Bearer <token> の形式で送信してください）' });
+    return res.status(401).json({ error: 'Unauthorized', message: 'トークンの形式が正しくありません', statusCode: 401 });
   }
 
   const token = parts[1];
 
-  // ---- JWTトークンを検証する ----
-  // jwt.verify: トークンが改ざんされていないか・有効期限内かを確認する
-  // 成功すると decoded にトークン生成時に埋め込んだ情報（{ id: userId }）が入る
-  // 失敗すると err にエラーが入る
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) {
-      // トークンの期限切れの場合
-      if (err.name === 'TokenExpiredError') {
-        return res.status(401).json({ message: 'トークンの有効期限が切れています。再度ログインしてください' });
-      }
-      // トークンが不正な場合（改ざん・無効な署名など）
-      return res.status(401).json({ message: 'トークンが無効です' });
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // DBからロールを含む最新のユーザー情報を取得する
+    // JWTペイロードにroleを入れると役割変更が即反映されないため、毎回DBを参照する
+    const result = await pool.query(
+      'SELECT id, name, email, role FROM users WHERE id = $1 AND deleted_at IS NULL',
+      [decoded.id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(401).json({ error: 'Unauthorized', message: 'ユーザーが見つかりません', statusCode: 401 });
     }
 
-    // ---- 検証成功: req.user にユーザー情報をセットする ----
-    // これにより、後続のコントローラーで req.user.id が使えるようになる
-    req.user = decoded;
-
-    // next(): 次のミドルウェアまたはルートハンドラーへ処理を進める
+    req.user = result.rows[0]; // { id, name, email, role }
     next();
-  });
+  } catch (err) {
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({ error: 'Unauthorized', message: 'トークンの有効期限が切れています。再度ログインしてください', statusCode: 401 });
+    }
+    return res.status(401).json({ error: 'Unauthorized', message: 'トークンが無効です', statusCode: 401 });
+  }
 };
 
-// 外部から使えるようにエクスポートする
 module.exports = authMiddleware;

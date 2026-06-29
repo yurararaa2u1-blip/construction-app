@@ -15,7 +15,8 @@ function Login() {
     try {
       const res = await client.post('/api/auth/login', { email, password });
       localStorage.setItem('token', res.data.token);
-      navigate('/projects');
+      localStorage.setItem('user', JSON.stringify(res.data.user));
+      navigate('/');
     } catch (err) {
       if (err.response?.status === 401) {
         setError('メールアドレスまたはパスワードが正しくありません');
