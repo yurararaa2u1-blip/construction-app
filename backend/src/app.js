@@ -65,6 +65,13 @@ app.use('/api/users', usersRouter);
 const notificationsRouter = require('./routes/notifications');
 app.use('/api/notifications', notificationsRouter);
 
+// ========================================
+// バッチスケジューラーの起動
+// ========================================
+// なぜここで起動するか: サーバーが立ち上がると同時にスケジューラーも動き始めるようにするため
+const { startScheduler } = require('./batch/scheduler');
+startScheduler();
+
 // ヘルスチェック用エンドポイント
 // GET /health にアクセスするとサーバーが正常に動いているか確認できる
 // 例）curl http://localhost:3000/health
