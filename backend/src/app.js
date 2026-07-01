@@ -35,9 +35,16 @@ const PORT = process.env.PORT || 3000;
 // ========================================
 
 // CORSを有効にする
-// これにより、フロントエンドのJavaScript（React など）から
-// このサーバーへのAPIリクエストが許可される
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:3001',
+    'http://localhost:5173',
+    'https://d1a8gn83rnvgqm.cloudfront.net',
+  ],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+}));
 
 // リクエストボディをJSON形式で受け取れるようにする
 // フロントエンドから送られてくるJSONデータを req.body で読み取るために必要
