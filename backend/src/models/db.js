@@ -18,7 +18,7 @@ const pool = new Pool({
   database: process.env.DB_NAME,     // 接続するデータベース名
   user:     process.env.DB_USER,     // データベースのユーザー名
   password: process.env.DB_PASSWORD, // データベースのパスワード
-  ssl: false,
+  ssl: process.env.DB_HOST === 'localhost' ? false : { rejectUnauthorized: false },
 });
 
 // ========================================
