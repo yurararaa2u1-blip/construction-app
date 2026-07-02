@@ -37,6 +37,7 @@ const PORT = process.env.PORT || 3000;
 // CORSを有効にする
 app.use(cors({
   origin: [
+    'http://localhost:3000',
     'http://localhost:3001',
     'http://localhost:5173',
     'https://d1a8gn83rnvgqm.cloudfront.net',
