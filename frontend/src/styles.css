@@ -508,6 +508,33 @@ body {
   gap: 14px;
 }
 
+/* ハンバーガーメニューボタン（デフォルトはPC非表示） */
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 28px;
+  height: 22px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-right: 12px;
+}
+
+.hamburger-btn span {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background: #fff;
+  border-radius: 2px;
+}
+
+/* サイドバーオーバーレイ（デフォルトは非表示） */
+.sidebar-overlay {
+  display: none;
+}
+
 .header-username {
   font-size: 13px;
   color: rgba(255, 255, 255, 0.85);
@@ -813,6 +840,54 @@ body {
 /* ========================================
    レスポンシブ対応
    ======================================== */
+
+/* タブレット・スマホ共通: サイドバーをハンバーガーメニュー化 */
+@media (max-width: 768px) {
+  .hamburger-btn {
+    display: flex;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 100;
+    width: 240px;
+    height: calc(100vh - 56px);
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 99;
+  }
+
+  .layout-main {
+    padding: 16px;
+    width: 100%;
+  }
+
+  .header-title {
+    font-size: 15px;
+  }
+
+  .header-username {
+    display: none;
+  }
+}
+
 @media (max-width: 600px) {
   .page-container,
   .page-container-narrow {

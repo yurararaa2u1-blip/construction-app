@@ -7,6 +7,9 @@ import '../styles.css';
 function ProjectDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const isAdmin = user.role === 'admin';
+  const canEditTask = user.role === 'admin' || user.role === 'supervisor';
 
   const [project, setProject]     = useState(null);
   const [name, setName]           = useState('');
@@ -145,11 +148,15 @@ function ProjectDetail() {
               <option value="completed">完了</option>
             </select>
           </div>
-          <hr className="divider" />
-          <div className="btn-group">
-            <button type="submit" className="btn btn-primary">更新する</button>
-            <button type="button" className="btn btn-danger" onClick={handleDelete}>削除</button>
-          </div>
+          {isAdmin && (
+            <>
+              <hr className="divider" />
+              <div className="btn-group">
+                <button type="submit" className="btn btn-primary">更新する</button>
+                <button type="button" className="btn btn-danger" onClick={handleDelete}>削除</button>
+              </div>
+            </>
+          )}
         </form>
       </div>
 
@@ -158,20 +165,22 @@ function ProjectDetail() {
       <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
         {taskError && <div className="error-message" style={{ margin: '12px 16px 0' }}>{taskError}</div>}
 
-        {/* 工程追加フォーム */}
-        <form onSubmit={handleAddTask} style={{ padding: '16px', borderBottom: '1px solid #eaedf0' }}>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            <input type="text" className="form-input" style={{ flex: 2, minWidth: 140 }}
-              placeholder="工程名（例：基礎工事）"
-              value={taskName} onChange={e => setTaskName(e.target.value)} required />
-            <input type="date" className="form-input" style={{ flex: 1, minWidth: 120 }}
-              value={plannedStart} onChange={e => setPlannedStart(e.target.value)} required />
-            <input type="date" className="form-input" style={{ flex: 1, minWidth: 120 }}
-              value={plannedEnd} onChange={e => setPlannedEnd(e.target.value)} required />
-            <button type="submit" className="btn btn-primary">追加</button>
-          </div>
-          <p style={{ fontSize: 11, color: '#888', margin: '6px 0 0' }}>予定開始日 〜 予定完了日</p>
-        </form>
+        {/* 工程追加フォーム（admin/supervisorのみ） */}
+        {canEditTask && (
+          <form onSubmit={handleAddTask} style={{ padding: '16px', borderBottom: '1px solid #eaedf0' }}>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              <input type="text" className="form-input" style={{ flex: 2, minWidth: 140 }}
+                placeholder="工程名（例：基礎工事）"
+                value={taskName} onChange={e => setTaskName(e.target.value)} required />
+              <input type="date" className="form-input" style={{ flex: 1, minWidth: 120 }}
+                value={plannedStart} onChange={e => setPlannedStart(e.target.value)} required />
+              <input type="date" className="form-input" style={{ flex: 1, minWidth: 120 }}
+                value={plannedEnd} onChange={e => setPlannedEnd(e.target.value)} required />
+              <button type="submit" className="btn btn-primary">追加</button>
+            </div>
+            <p style={{ fontSize: 11, color: '#888', margin: '6px 0 0' }}>予定開始日 〜 予定完了日</p>
+          </form>
+        )}
 
         {tasks.length === 0 ? (
           <p className="empty-message">工程がまだありません</p>
@@ -193,6 +202,8 @@ function ProjectDetail() {
                   task={task}
                   onProgressChange={handleProgressChange}
                   onDelete={handleDeleteTask}
+                  canEditTask={canEditTask}
+                  isAdmin={isAdmin}
                 />
               ))}
             </tbody>
@@ -203,7 +214,7 @@ function ProjectDetail() {
   );
 }
 
-function TaskRow({ task, onProgressChange, onDelete }) {
+function TaskRow({ task, onProgressChange, onDelete, canEditTask, isAdmin }) {
   const [progress, setProgress] = useState(task.progress);
 
   const handleBlur = () => {
@@ -226,7 +237,13 @@ function TaskRow({ task, onProgressChange, onDelete }) {
             value={progress}
             onChange={e => setProgress(e.target.value)}
             onBlur={handleBlur}
-            style={{ width: 52, padding: '4px 6px', border: '1px solid #ccd0d5', borderRadius: 4, fontSize: 13 }}
+            disabled={!canEditTask}
+            style={{
+              width: 52, padding: '4px 6px',
+              border: '1px solid #ccd0d5', borderRadius: 4, fontSize: 13,
+              background: canEditTask ? '#fff' : '#f0f0f0',
+              cursor: canEditTask ? 'text' : 'not-allowed',
+            }}
           />
           <span style={{ fontSize: 12, color: '#555' }}>%</span>
         </div>
@@ -243,7 +260,9 @@ function TaskRow({ task, onProgressChange, onDelete }) {
         )}
       </td>
       <td>
-        <button className="btn-task-delete" onClick={() => onDelete(task.id)} title="削除">✕</button>
+        {isAdmin && (
+          <button className="btn-task-delete" onClick={() => onDelete(task.id)} title="削除">✕</button>
+        )}
       </td>
     </tr>
   );

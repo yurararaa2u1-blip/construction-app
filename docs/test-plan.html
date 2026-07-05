@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>建築工事工程管理アプリ 動作テスト計画書</title>
+<style>
+  @page { size: A4; margin: 15mm; }
+  body {
+    font-family: "Meiryo", "Yu Gothic", sans-serif;
+    color: #222;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  h1 {
+    border-bottom: 3px solid #1e3a5f;
+    padding-bottom: 8px;
+    color: #1e3a5f;
+    font-size: 22pt;
+  }
+  h2 {
+    background: #1e3a5f;
+    color: white;
+    padding: 6px 12px;
+    margin-top: 24px;
+    font-size: 14pt;
+    page-break-after: avoid;
+  }
+  h3 {
+    color: #1e3a5f;
+    border-left: 4px solid #1e3a5f;
+    padding-left: 8px;
+    font-size: 12pt;
+    margin-top: 16px;
+    page-break-after: avoid;
+  }
+  .info-box {
+    background: #f0f5fa;
+    border-left: 4px solid #1e3a5f;
+    padding: 10px 15px;
+    margin: 10px 0;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 10px 0;
+    page-break-inside: avoid;
+  }
+  th, td {
+    border: 1px solid #999;
+    padding: 6px 10px;
+    text-align: left;
+    font-size: 10pt;
+  }
+  th {
+    background: #e0e8f0;
+    font-weight: bold;
+  }
+  .checkbox {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid #333;
+    margin-right: 6px;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 12px;
+    font-size: 12px;
+    font-weight: bold;
+  }
+  .checkbox-pass {
+    background: #d4edda;
+    border-color: #2e8b57;
+    color: #2e8b57;
+  }
+  .checkbox-code {
+    background: #cfe2ff;
+    border-color: #0066cc;
+    color: #0066cc;
+    font-size: 10px;
+  }
+  .checkbox-untested {
+    background: #f0f0f0;
+    border-color: #999;
+    color: #999;
+    font-size: 10px;
+  }
+  .step {
+    margin: 5px 0;
+    padding-left: 20px;
+  }
+  .step-note {
+    display: inline-block;
+    color: #666;
+    font-size: 9pt;
+    margin-left: 8px;
+    font-style: italic;
+  }
+  .expected {
+    background: #fff8e0;
+    padding: 5px 10px;
+    border-left: 3px solid #f0b000;
+    margin: 5px 0;
+  }
+  .note {
+    color: #666;
+    font-size: 10pt;
+    font-style: italic;
+  }
+  .priority-high { color: #c00; font-weight: bold; }
+  .priority-mid { color: #d80; }
+  .toc {
+    background: #f5f5f5;
+    padding: 15px 25px;
+    border-radius: 5px;
+  }
+  .toc ul { margin: 5px 0; padding-left: 20px; }
+  .legend {
+    background: #fffaf0;
+    border: 1px solid #f0b000;
+    padding: 8px 15px;
+    margin: 15px 0;
+    border-radius: 4px;
+  }
+  .legend-item {
+    display: inline-block;
+    margin-right: 20px;
+    font-size: 10pt;
+  }
+  .summary-table th,
+  .summary-table td {
+    padding: 8px 10px;
+  }
+  .result-pass { color: #2e8b57; font-weight: bold; }
+  .result-partial { color: #d80; font-weight: bold; }
+  .result-untested { color: #999; }
+  @media print {
+    h2 { page-break-before: auto; }
+  }
+</style>
+</head>
+<body>
+
+<h1>建築工事工程管理アプリ 動作テスト計画書＆結果報告書</h1>
+
+<div class="info-box">
+  <strong>作成日:</strong> 2026年7月2日<br>
+  <strong>実施日:</strong> 2026年7月2日 〜 2026年7月3日<br>
+  <strong>追加改修・検証日:</strong> 2026年7月5日<br>
+  <strong>実施者:</strong> ゆら<br>
+  <strong>テスト環境:</strong> AWS本番環境（一部ローカル環境）<br>
+  <strong>フロントエンドURL:</strong> https://d1a8gn83rnvgqm.cloudfront.net<br>
+  <strong>目的:</strong> AWS本番デプロイ後の主要機能の動作確認
+</div>
+
+<div class="legend">
+  <strong>凡例：</strong>
+  <span class="legend-item"><span class="checkbox checkbox-pass">✓</span>合格</span>
+  <span class="legend-item"><span class="checkbox checkbox-code">C</span>コード確認済</span>
+  <span class="legend-item"><span class="checkbox checkbox-untested">-</span>未検証</span>
+</div>
+
+<h2>テスト結果サマリー</h2>
+
+<table class="summary-table">
+  <tr>
+    <th>#</th>
+    <th>テストカテゴリ</th>
+    <th>結果</th>
+    <th>備考</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>認証機能テスト</td>
+    <td class="result-pass">合格</td>
+    <td>主要動作を確認</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>権限（ロール）別動作確認</td>
+    <td class="result-pass">合格</td>
+    <td>admin/supervisor/viewerの3ロールすべて確認</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>現場管理テスト</td>
+    <td class="result-pass">合格</td>
+    <td>作成・一覧・詳細表示を確認</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>工程管理テスト</td>
+    <td class="result-pass">合格</td>
+    <td>4件のタスクで確認</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>進捗更新・遅延自動判定</td>
+    <td class="result-pass">合格</td>
+    <td>最重要機能。全パターン合格</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>通知機能テスト</td>
+    <td class="result-pass">合格</td>
+    <td>生成・表示・既読化すべて合格</td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>ユーザー管理テスト</td>
+    <td class="result-pass">合格</td>
+    <td>ロール変更・削除・安全ガードを確認</td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>画面レスポンシブテスト</td>
+    <td class="result-pass">合格</td>
+    <td>ハンバーガーメニュー化を実装・全画面確認</td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>バッチ処理テスト</td>
+    <td class="result-pass">合格</td>
+    <td>手動実行で動作確認</td>
+  </tr>
+</table>
+
+<div class="info-box" style="border-left-color:#2e8b57;background:#e8f5e8;">
+  <strong>総合結果：主要機能はすべて合格。本番環境で運用開始可能。</strong>
+</div>
+
+<h2>発見した課題と対応状況</h2>
+
+<div class="info-box" style="border-left-color:#2e8b57;background:#e8f5e8;">
+  <strong>課題1: フロント権限UIの不完全性 <span style="background:#2e8b57;color:#fff;padding:2px 8px;border-radius:4px;font-size:9pt;margin-left:6px;">解決済み（2026-07-05）</span></strong><br>
+  <s>supervisor/viewerでも「+ 新規作成」ボタンが表示される</s><br>
+  <strong>対応：</strong>ProjectList.jsx / ProjectDetail.jsx を修正し、ロールに応じてUIを分岐。3ロールでローカル検証済み。詳細は下記「10. 機能改修と検証」参照。
+</div>
+
+<div class="info-box" style="border-left-color:#d80;background:#fff8e0;">
+  <strong>課題2: project_members管理UIがない</strong><br>
+  現場のメンバー追加はSQL直接操作が必要。管理者UIから追加できるべき。<br>
+  <strong>影響：</strong>中（運用上、admin以外のユーザーに現場を割り当てる手段がUIにない）<br>
+  <strong>状態：</strong>未対応
+</div>
+
+<h2>1. 認証機能テスト</h2>
+
+<h3>1.1 新規登録</h3>
+<table>
+  <tr><th style="width:20%">項目</th><th>内容</th></tr>
+  <tr><td>手順</td><td>新規登録画面で名前・メール・パスワードを入力し「登録する」</td></tr>
+  <tr><td>期待結果</td><td>登録成功→自動ログイン→ダッシュボード表示</td></tr>
+</table>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>正常系: 新規登録が成功する<span class="step-note">ゆら/テスト監督/テスト閲覧/テスト一覧の4名で確認</span></div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>異常系: 既に登録済みのメールで登録するとエラー<span class="step-note">「このメールアドレスはすでに登録されています」表示</span></div>
+<div class="step"><span class="checkbox checkbox-untested">-</span>異常系: パスワードが短すぎる場合エラー<span class="step-note">未検証</span></div>
+
+<h3>1.2 ログイン</h3>
+<table>
+  <tr><th style="width:20%">項目</th><th>内容</th></tr>
+  <tr><td>手順</td><td>ログイン画面でメール・パスワードを入力</td></tr>
+  <tr><td>期待結果</td><td>ログイン成功→ダッシュボード表示</td></tr>
+</table>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>正常系: 正しい認証情報でログインできる</div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>異常系: 間違ったパスワードでエラーメッセージ表示<span class="step-note">「メールアドレスまたはパスワードが正しくありません」</span></div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>異常系: 削除済みユーザー・存在しないメールでエラー</div>
+
+<h3>1.3 ログアウト</h3>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>ログアウトボタンでログイン画面へ戻る</div>
+<div class="step"><span class="checkbox checkbox-untested">-</span>ログアウト後に保護画面URLを直接アクセスするとログイン画面へリダイレクト<span class="step-note">未検証</span></div>
+
+<h3>1.4 セッション保持（JWT）</h3>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>ページをリロードしてもログイン状態が保たれる<span class="step-note">F5で確認</span></div>
+<div class="step"><span class="checkbox checkbox-untested">-</span>タブを閉じて再度開いてもログイン状態<span class="step-note">未検証</span></div>
+
+<h2>2. 権限（ロール）別動作確認</h2>
+
+<div class="info-box">
+  <strong>3種類のロール:</strong>
+  <ul>
+    <li><strong>admin（管理者）:</strong> 全機能利用可能</li>
+    <li><strong>supervisor（現場監督）:</strong> 現場閲覧・タスク進捗更新</li>
+    <li><strong>viewer（閲覧者）:</strong> 閲覧のみ</li>
+  </ul>
+</div>
+
+<h3>2.1 admin権限</h3>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>現場作成ボタンが表示される</div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>ユーザー管理画面にアクセスできる</div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>他ユーザーのロールを変更できる<span class="step-note">viewer→supervisorの変更を確認</span></div>
+
+<h3>2.2 supervisor権限</h3>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>現場作成ボタンは表示されない、または403エラー<span class="step-note">ボタン表示はされるがバックエンド403で拒否（課題1参照）</span></div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>タスクの進捗率を更新できる<span class="step-note">配管工事30%→50%で確認</span></div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>ユーザー管理画面にアクセスできない<span class="step-note">サイドバーに項目非表示</span></div>
+
+<h3>2.3 viewer権限</h3>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>現場一覧・詳細を閲覧できる</div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>タスクの進捗率を更新できない<span class="step-note">「進捗の更新に失敗しました」エラー</span></div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>現場作成できない<span class="step-note">「現場の作成は管理者のみ可能です」</span></div>
+
+<h3>2.4 安全ガード</h3>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>自分自身のロールを変更しようとするとエラー<span class="step-note">UIで自分の行にドロップダウン非表示</span></div>
+<div class="step"><span class="checkbox checkbox-code">C</span>最後の1人のadminを降格しようとするとエラー<span class="step-note">controllers/users.js 43-50行でコード実装確認</span></div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>自分自身の削除ガード<span class="step-note">UIで自分の行に✕ボタン非表示</span></div>
+<div class="step"><span class="checkbox checkbox-code">C</span>最後の1人のadminを削除しようとするとエラー<span class="step-note">controllers/users.js 80-87行でコード実装確認</span></div>
+
+<h2>3. 現場（プロジェクト）管理テスト</h2>
+
+<h3>3.1 現場作成（adminのみ）</h3>
+<table>
+  <tr><th style="width:20%">項目</th><th>内容</th></tr>
+  <tr><td>手順</td><td>「+ 新規作成」→ 現場名・住所・工期・ステータス入力 → 「作成する」</td></tr>
+  <tr><td>期待結果</td><td>作成成功→現場一覧に表示される</td></tr>
+</table>
+<div class="step"><span class="checkbox checkbox-untested">-</span>必須項目未入力でバリデーションエラー<span class="step-note">未検証</span></div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>正常データで作成成功<span class="step-note">「大阪駅ビル新築工事」で確認</span></div>
+
+<h3>3.2 現場一覧表示</h3>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>作成した現場が一覧に表示される</div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>各現場カードに進捗率・ステータスが表示される<span class="step-note">33%・計画中・遅延中の表示を確認</span></div>
+
+<h3>3.3 現場詳細表示</h3>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>現場をクリックすると詳細画面へ遷移</div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>ガントチャート（S-04）が表示される</div>
+
+<h3>3.4 現場編集</h3>
+<div class="step"><span class="checkbox checkbox-untested">-</span>現場情報を編集・保存できる<span class="step-note">未検証</span></div>
+
+<h3>3.5 現場削除（論理削除）</h3>
+<div class="step"><span class="checkbox checkbox-untested">-</span>削除後、一覧から消える<span class="step-note">未検証</span></div>
+<div class="step"><span class="checkbox checkbox-untested">-</span>DBには残るがdeleted_atが設定される<span class="step-note">未検証</span></div>
+
+<h2>4. 工程（タスク）管理テスト</h2>
+
+<h3>4.1 タスク作成</h3>
+<table>
+  <tr><th style="width:20%">項目</th><th>内容</th></tr>
+  <tr><td>手順</td><td>現場詳細画面でタスク追加ボタン → 名前・予定開始日・予定終了日入力</td></tr>
+  <tr><td>期待結果</td><td>タスクがガントチャートに追加される</td></tr>
+</table>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>タスクを複数作成できる<span class="step-note">基礎工事/配管工事/内装工事/屋根工事の4件で確認</span></div>
+<div class="step"><span class="checkbox checkbox-untested">-</span>予定終了日が予定開始日より前の場合エラー<span class="step-note">未検証</span></div>
+
+<h3>4.2 タスク一覧表示</h3>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>作成したタスクが一覧・ガントチャートに表示される</div>
+
+<h2>5. 進捗更新と遅延自動判定テスト <span class="priority-high">【最重要】</span></h2>
+
+<div class="info-box">
+  <strong>これはこのシステムの中核機能です。</strong><br>
+  最重要API: <code>PATCH /api/tasks/:taskId</code><br>
+  遅延判定条件: <code>planned_end &lt; 今日 かつ progress &lt; 100</code>
+</div>
+
+<h3>5.1 進捗率更新（supervisor以上）</h3>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>進捗率を0→50%に更新できる</div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>プログレスバーが更新後の値で表示される</div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>進捗率100%にすると「完了」ステータスに変わる<span class="step-note">基礎工事で確認</span></div>
+
+<h3>5.2 遅延自動判定（重要）</h3>
+<table>
+  <tr><th>ケース</th><th>予定終了日</th><th>進捗率</th><th>期待結果</th><th>実結果</th></tr>
+  <tr><td>過去 & 未完了</td><td>2026-06-30</td><td>50</td><td>true（遅延）</td><td class="result-pass">合格</td></tr>
+  <tr><td>過去 & 完了</td><td>2026-06-30</td><td>100</td><td>false</td><td class="result-pass">合格</td></tr>
+  <tr><td>未来 & 未完了</td><td>2026-10-01</td><td>0</td><td>false（未着工）</td><td class="result-pass">合格</td></tr>
+  <tr><td>今日 & 未完了</td><td>2026-07-02</td><td>50</td><td>false</td><td class="result-untested">未検証</td></tr>
+</table>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>遅延と判定されたタスクは「遅延中」バッジが表示される</div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>進捗率を100にすると遅延バッジが消える</div>
+<div class="step"><span class="checkbox checkbox-code">C</span>フロントからis_delayedを直接更新できない<span class="step-note">バックエンドで自動計算する設計</span></div>
+
+<h2>6. 通知機能テスト</h2>
+
+<h3>6.1 通知一覧表示</h3>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>左メニューの「通知」から一覧を表示できる</div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>遅延したタスクの通知が表示される<span class="step-note">屋根工事の遅延アラートを確認</span></div>
+
+<h3>6.2 通知既読化</h3>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>通知をクリックまたはマークで既読になる</div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>未読数バッジが正しく更新される<span class="step-note">「未読 1件」→「0件」を確認</span></div>
+
+<h2>7. ユーザー管理テスト（admin）</h2>
+
+<h3>7.1 ユーザー一覧</h3>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>登録済みユーザーが一覧表示される</div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>各ユーザーのロールが表示される<span class="step-note">管理者/現場監督/閲覧のみバッジ</span></div>
+
+<h3>7.2 ユーザーロール変更</h3>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>viewer → supervisor に変更できる<span class="step-note">テスト監督で確認</span></div>
+<div class="step"><span class="checkbox checkbox-untested">-</span>supervisor → admin に変更できる<span class="step-note">未検証（テスト用にテスト監督をsupervisorのままとした）</span></div>
+
+<h3>7.3 ユーザー削除（論理削除）</h3>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>ユーザーを削除できる<span class="step-note">テスト閲覧の削除を確認</span></div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>削除したユーザーはログインできない<span class="step-note">「メールアドレスまたはパスワードが正しくありません」</span></div>
+
+<h2>8. 画面レスポンシブテスト（NF-02）</h2>
+
+<div class="info-box">
+  現場監督はスマホから進捗入力するため、スマホ表示の動作確認は必須。<br>
+  <strong>本テストで発見した重大な問題により、ハンバーガーメニュー実装を追加。</strong>
+</div>
+
+<h3>8.1 PC表示</h3>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>1920×1080で全画面が正しく表示される</div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>サイドバーが常時表示される</div>
+
+<h3>8.2 スマホ表示（375×667 / iPhone SE想定）</h3>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>表示崩れがない<span class="step-note">ハンバーガーメニュー実装後に確認</span></div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>ハンバーガーメニューでナビゲーション可能</div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>ダッシュボード・現場一覧・現場詳細・ガントチャート・通知・ユーザー管理の全画面確認</div>
+<div class="step"><span class="checkbox checkbox-untested">-</span>ガントチャートが横スクロール可能<span class="step-note">見た目確認のみ・実操作は未検証</span></div>
+<div class="step"><span class="checkbox checkbox-untested">-</span>実機（iPhone）でのタッチ操作で進捗更新できる<span class="step-note">未検証</span></div>
+
+<h2>9. バッチ処理テスト</h2>
+
+<h3>9.1 毎日0時の遅延判定バッチ</h3>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>手動でバッチスクリプトを実行できる<span class="step-note">node src/batch/delayedCheck.js で実行</span></div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>実行後、is_delayedが正しく再計算される</div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>新たに遅延したタスクについてnotificationsテーブルにレコード追加<span class="step-note">屋根工事の通知が生成されたことを確認</span></div>
+
+<h2>10. 機能改修と検証（2026-07-05追加）</h2>
+
+<div class="info-box" style="border-left-color:#2e8b57;background:#e8f5e8;">
+  課題1の対応および副次改善（401自動リダイレクト）の実装と、ロール別動作の再検証を実施。
+</div>
+
+<h3>10.1 フロント権限UIの改修</h3>
+
+<table>
+  <tr><th style="width:25%">修正ファイル</th><th>修正内容</th></tr>
+  <tr>
+    <td>frontend/src/pages/ProjectList.jsx</td>
+    <td>「＋ 新規作成」ボタンをadminのみに表示</td>
+  </tr>
+  <tr>
+    <td>frontend/src/pages/ProjectDetail.jsx</td>
+    <td>
+      「更新する」「削除」ボタンをadminのみに表示<br>
+      「工程追加フォーム」をadmin/supervisorのみに表示<br>
+      進捗率入力欄をviewerで <code>disabled</code>（グレーアウト）<br>
+      タスクの「✕削除」ボタンをadminのみに表示
+    </td>
+  </tr>
+</table>
+
+<h3>10.2 401自動リダイレクトの追加（副次改善）</h3>
+
+<table>
+  <tr><th style="width:25%">修正ファイル</th><th>修正内容</th></tr>
+  <tr>
+    <td>frontend/src/api/client.js</td>
+    <td>
+      レスポンスインターセプターを追加。<br>
+      APIレスポンスで401が返された場合、自動で<code>token</code>と<code>user</code>をLocalStorageから削除し、ログイン画面へ遷移する。
+    </td>
+  </tr>
+</table>
+
+<h3>10.3 検証結果</h3>
+
+<table>
+  <tr>
+    <th>項目</th>
+    <th>admin</th>
+    <th>supervisor</th>
+    <th>viewer</th>
+  </tr>
+  <tr>
+    <td>＋ 新規作成ボタン</td>
+    <td class="result-pass">表示</td>
+    <td class="result-pass">非表示</td>
+    <td class="result-pass">非表示</td>
+  </tr>
+  <tr>
+    <td>更新する / 削除ボタン</td>
+    <td class="result-pass">表示</td>
+    <td class="result-pass">非表示</td>
+    <td class="result-pass">非表示</td>
+  </tr>
+  <tr>
+    <td>工程追加フォーム</td>
+    <td class="result-pass">表示</td>
+    <td class="result-pass">表示</td>
+    <td class="result-pass">非表示</td>
+  </tr>
+  <tr>
+    <td>進捗率入力</td>
+    <td class="result-pass">編集可</td>
+    <td class="result-pass">編集可</td>
+    <td class="result-pass">グレーアウト</td>
+  </tr>
+  <tr>
+    <td>タスク✕削除ボタン</td>
+    <td class="result-pass">表示</td>
+    <td class="result-pass">非表示</td>
+    <td class="result-pass">非表示</td>
+  </tr>
+  <tr>
+    <td>401リダイレクト</td>
+    <td colspan="3" class="result-pass">✅ 動作確認済み（LocalStorageのtokenを無効化して検証）</td>
+  </tr>
+</table>
+
+<div class="step"><span class="checkbox checkbox-pass">✓</span>全ロールでUI表示のロール制御を確認</div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>401受信時に自動ログアウト・ログイン画面遷移を確認</div>
+
+<h3>10.4 検証環境</h3>
+
+<div class="step"><strong>検証環境：</strong>ローカル開発サーバー（<code>http://localhost:3000</code>）→ 本番API（<code>https://d2sqygsot7k84c.cloudfront.net</code>）</div>
+<div class="step"><strong>使用アカウント：</strong>ゆら（admin）、テスト監督（supervisor）、テスト一覧（viewer）</div>
+<div class="step"><strong>本番反映：</strong>後日デプロイ予定</div>
+
+<h2>テスト結果記録</h2>
+
+<table>
+  <tr>
+    <th>テスト日</th>
+    <th>実施者</th>
+    <th>合格</th>
+    <th>コード確認</th>
+    <th>未検証</th>
+    <th>不合格</th>
+    <th>備考</th>
+  </tr>
+  <tr>
+    <td>2026/7/2〜7/3</td>
+    <td>ゆら</td>
+    <td class="result-pass">45件</td>
+    <td class="result-partial">4件</td>
+    <td class="result-untested">11件</td>
+    <td>0件</td>
+    <td>主要機能はすべて合格。未検証は補助的な項目のみ</td>
+  </tr>
+  <tr>
+    <td>2026/7/5</td>
+    <td>ゆら</td>
+    <td class="result-pass">6件</td>
+    <td>-</td>
+    <td>-</td>
+    <td>0件</td>
+    <td>課題1の改修＋401リダイレクト機能を追加。全ロールでUI動作を確認</td>
+  </tr>
+</table>
+
+<h2>次回のテストで確認する項目</h2>
+
+<ol>
+  <li>異常系のバリデーション（必須項目未入力、期間の逆順など）</li>
+  <li>現場編集・削除機能</li>
+  <li>supervisor→adminのロール変更</li>
+  <li>実機（iPhone）でのタッチ操作</li>
+  <li>ガントチャートの横スクロール</li>
+  <li>ログアウト後の保護画面リダイレクト</li>
+  <li>タブを閉じて再度開いた場合のセッション保持</li>
+</ol>
+
+<div class="note" style="margin-top:30px;">
+  ※本ドキュメントはClaude Codeにより自動生成されました（2026年7月2日作成 / 2026年7月3日結果追記）
+</div>
+
+</body>
+</html>

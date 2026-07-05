@@ -21,6 +21,7 @@ const STATUS_BADGE = {
 function ProjectList() {
   const [projects, setProjects] = useState([]);
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
 
   useEffect(() => {
     client.get('/api/projects').then(res => {
@@ -33,9 +34,11 @@ function ProjectList() {
     <Layout>
       <div className="page-header">
         <h1 className="page-title">現場一覧</h1>
-        <button className="btn btn-primary" onClick={() => navigate('/projects/new')}>
-          ＋ 新規作成
-        </button>
+        {user.role === 'admin' && (
+          <button className="btn btn-primary" onClick={() => navigate('/projects/new')}>
+            ＋ 新規作成
+          </button>
+        )}
       </div>
 
       <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
