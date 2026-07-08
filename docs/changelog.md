@@ -6,6 +6,33 @@
 
 ---
 
+## 2026-07-08
+
+### 追加
+
+- **project_members管理UI**（テスト計画書「発見した課題2」の対応）
+  - バックエンドAPI（`backend/src/controllers/projects.js` / `backend/src/routes/projects.js`）
+    - `GET /api/projects/:id/members` メンバー一覧取得（admin / created_by / メンバー本人）
+    - `POST /api/projects/:id/members` メンバー追加（adminのみ）
+    - `DELETE /api/projects/:id/members/:userId` メンバー削除（adminのみ）
+    - ロールバリデーション（admin / supervisor / viewer のみ受付）、重複追加防止（409）
+  - フロントエンドUI（`frontend/src/pages/ProjectDetail.jsx`）
+    - 現場詳細画面に「メンバー」セクションを追加
+    - 一覧は全ロール閲覧可、追加フォームと✕削除ボタンはadminのみに表示
+    - 追加フォームのユーザードロップダウンは既存メンバーを除外
+
+### 検証
+
+- 全ロール（admin / supervisor / viewer）で本番環境の動作を確認
+  - admin: メンバー追加・削除UI表示・実操作OK
+  - supervisor / viewer: 一覧のみ表示、追加/削除UI非表示
+
+### インフラ
+
+- 本番デプロイ実施（S3アップロード → CloudFront `/*` キャッシュ削除 → EC2 git pull + PM2 restart）
+
+---
+
 ## 2026-07-05
 
 ### 追加
@@ -109,15 +136,12 @@
 
 ---
 
-## 発見済みだが未解決の課題
+## 解決済みの課題
 
-- **課題2: `project_members`管理UIがない**
-  - 現状：メンバー追加はSQL直接操作しかできない
-  - 対応予定：現場詳細画面に「メンバー追加」機能を実装
-  - 影響：中（運用上、admin以外のユーザーに現場を割り当てる手段がUIにない）
+- ~~課題1: フロント権限UIの不完全性~~ → 2026-07-07 本番反映
+- ~~課題2: `project_members`管理UIがない~~ → 2026-07-08 本番反映
 
 ## 今後の予定
 
-- 課題2の対応（project_members管理UI）
 - Phase 5-B: SESメール通知機能
 - 未検証のテスト項目（実機タッチ操作、バリデーション異常系など）
