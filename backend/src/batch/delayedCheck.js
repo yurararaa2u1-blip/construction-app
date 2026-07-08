@@ -10,6 +10,7 @@
 require('dotenv').config({ path: require('path').join(__dirname, '../..', '.env') });
 
 const pool = require('../models/db');
+const { sendDelayEmail } = require('../services/emailService');
 
 const runDelayedCheck = async () => {
   // 今日の日付（時刻は切り捨てて 00:00:00 にする）
@@ -63,34 +64,50 @@ const runDelayedCheck = async () => {
         : '不明';
       const message = `「${task.name}」（${task.project_name}）が予定完了日（${plannedEndStr}）を過ぎています。現在の進捗: ${task.progress}%`;
 
-      // 通知先ユーザーを決定する
+      // 通知先ユーザーを決定する（id と email をまとめて取得）
       // - assigned_to（担当者）が設定されていればその人に通知
       // - 設定されていなければ admin 全員に通知
-      let userIds = [];
+      let recipients = [];
       if (task.assigned_to) {
-        userIds = [task.assigned_to];
+        const one = await pool.query(
+          'SELECT id, email FROM users WHERE id = $1 AND deleted_at IS NULL',
+          [task.assigned_to]
+        );
+        recipients = one.rows;
       } else {
         const admins = await pool.query(
-          "SELECT id FROM users WHERE role = 'admin' AND deleted_at IS NULL"
+          "SELECT id, email FROM users WHERE role = 'admin' AND deleted_at IS NULL"
         );
-        userIds = admins.rows.map(u => u.id);
+        recipients = admins.rows;
       }
 
-      // notifications テーブルに記録する
-      // なぜ記録するか: フロントの通知一覧画面（S-07）に表示するため
-      for (const userId of userIds) {
+      // notifications テーブルに記録する（フロントの通知一覧画面 S-07 に表示するため）
+      for (const r of recipients) {
         await pool.query(
           `INSERT INTO notifications (project_id, task_id, user_id, type, message)
            VALUES ($1, $2, $3, 'delay', $4)`,
-          [task.project_id, task.id, userId, message]
+          [task.project_id, task.id, r.id, message]
         );
       }
 
-      // ローカル開発ではコンソールに出力してメール送信をシミュレートする
-      // 本番（AWS SES）では、ここをメール送信処理に置き換える
-      console.log(`  [メール通知シミュレート]`);
-      console.log(`    宛先ユーザー数: ${userIds.length}`);
-      console.log(`    内容: ${message}`);
+      // SES 経由でメール送信
+      // 例外は投げず、成否をログに残して次のタスクに進む
+      // なぜ: 1件の送信失敗で全体が止まるとバッチ全体が失敗する
+      console.log(`  [メール通知] 宛先: ${recipients.length}名`);
+      for (const r of recipients) {
+        const result = await sendDelayEmail({
+          to: r.email,
+          taskName: task.name,
+          projectName: task.project_name,
+          plannedEndStr,
+          progress: task.progress,
+        });
+        if (result.ok) {
+          console.log(`    ✓ ${r.email} → 送信成功 (MessageId: ${result.messageId})`);
+        } else {
+          console.error(`    ✗ ${r.email} → 送信失敗: ${result.error}`);
+        }
+      }
     }
 
     // -------------------------------------------------------
