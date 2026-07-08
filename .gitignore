@@ -15,3 +15,7 @@ npm-debug.log*
 
 # VSCodeの設定ファイル
 .vscode/
+
+# SSHキーペア（EC2接続用の秘密鍵）
+# 絶対にGitHubにアップしてはいけない
+*.pem
