@@ -26,6 +26,13 @@ function ProjectDetail() {
   const [plannedEnd, setPlannedEnd]     = useState('');
   const [taskError, setTaskError]       = useState('');
 
+  const [members, setMembers]                 = useState([]);
+  const [allUsers, setAllUsers]               = useState([]);
+  const [newMemberUserId, setNewMemberUserId] = useState('');
+  const [newMemberRole, setNewMemberRole]     = useState('viewer');
+  const [memberError, setMemberError]         = useState('');
+  const [memberSuccess, setMemberSuccess]     = useState('');
+
   useEffect(() => {
     client.get(`/api/projects/${id}`).then(res => {
       const p = res.data.project ?? res.data;
@@ -39,11 +46,57 @@ function ProjectDetail() {
   }, [id]);
 
   useEffect(() => { fetchTasks(); }, [id]);
+  useEffect(() => { fetchMembers(); }, [id]);
+  useEffect(() => {
+    if (isAdmin) {
+      client.get('/api/users')
+        .then(res => setAllUsers(res.data.users || []))
+        .catch(() => {});
+    }
+  }, [isAdmin]);
 
   const fetchTasks = () => {
     client.get(`/api/projects/${id}/tasks`)
       .then(res => setTasks(Array.isArray(res.data) ? res.data : []))
       .catch(() => setTaskError('工程の取得に失敗しました'));
+  };
+
+  const fetchMembers = () => {
+    client.get(`/api/projects/${id}/members`)
+      .then(res => setMembers(res.data.members || []))
+      .catch(() => {});
+  };
+
+  const handleAddMember = async (e) => {
+    e.preventDefault();
+    setMemberError(''); setMemberSuccess('');
+    if (!newMemberUserId) {
+      setMemberError('ユーザーを選択してください');
+      return;
+    }
+    try {
+      await client.post(`/api/projects/${id}/members`, {
+        user_id: newMemberUserId, role: newMemberRole,
+      });
+      setMemberSuccess('メンバーを追加しました');
+      setNewMemberUserId('');
+      setNewMemberRole('viewer');
+      fetchMembers();
+    } catch (err) {
+      setMemberError(err.response?.data?.message || 'メンバーの追加に失敗しました');
+    }
+  };
+
+  const handleRemoveMember = async (memberUserId, memberName) => {
+    if (!window.confirm(`「${memberName}」を現場から外しますか？`)) return;
+    setMemberError(''); setMemberSuccess('');
+    try {
+      await client.delete(`/api/projects/${id}/members/${memberUserId}`);
+      setMemberSuccess('メンバーを削除しました');
+      fetchMembers();
+    } catch (err) {
+      setMemberError(err.response?.data?.message || 'メンバーの削除に失敗しました');
+    }
   };
 
   const handleUpdate = async (e) => {
@@ -158,6 +211,82 @@ function ProjectDetail() {
             </>
           )}
         </form>
+      </div>
+
+      {/* メンバー管理 */}
+      <h2 style={{ fontSize: 15, fontWeight: 700, color: '#1e3a5f', marginBottom: 12 }}>メンバー</h2>
+      <div className="card" style={{ padding: 0, overflow: 'hidden', marginBottom: 24 }}>
+        {memberError   && <div className="error-message"   style={{ margin: '12px 16px 0' }}>{memberError}</div>}
+        {memberSuccess && <div className="success-message" style={{ margin: '12px 16px 0' }}>{memberSuccess}</div>}
+
+        {/* メンバー追加フォーム（adminのみ） */}
+        {isAdmin && (
+          <form onSubmit={handleAddMember} style={{ padding: '16px', borderBottom: '1px solid #eaedf0' }}>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              <select className="form-input" style={{ flex: 2, minWidth: 200 }}
+                value={newMemberUserId} onChange={e => setNewMemberUserId(e.target.value)}>
+                <option value="">-- ユーザーを選択 --</option>
+                {allUsers
+                  .filter(u => !members.some(m => m.user_id === u.id))
+                  .map(u => (
+                    <option key={u.id} value={u.id}>
+                      {u.name}（{u.email}）
+                    </option>
+                  ))}
+              </select>
+              <select className="form-input" style={{ flex: 1, minWidth: 120 }}
+                value={newMemberRole} onChange={e => setNewMemberRole(e.target.value)}>
+                <option value="viewer">閲覧のみ</option>
+                <option value="supervisor">現場監督</option>
+                <option value="admin">管理者</option>
+              </select>
+              <button type="submit" className="btn btn-primary">追加</button>
+            </div>
+            <p style={{ fontSize: 11, color: '#888', margin: '6px 0 0' }}>
+              現場のメンバーとして参加するユーザーとロールを選択
+            </p>
+          </form>
+        )}
+
+        {members.length === 0 ? (
+          <p className="empty-message">メンバーがまだいません</p>
+        ) : (
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>氏名</th>
+                <th>メール</th>
+                <th>ロール</th>
+                <th>参加日</th>
+                {isAdmin && <th></th>}
+              </tr>
+            </thead>
+            <tbody>
+              {members.map(m => (
+                <tr key={m.id}>
+                  <td data-label="氏名" style={{ fontWeight: 600 }}>{m.name}</td>
+                  <td data-label="メール">{m.email}</td>
+                  <td data-label="ロール">
+                    <span className="badge">
+                      {m.member_role === 'admin' ? '管理者' :
+                       m.member_role === 'supervisor' ? '現場監督' : '閲覧のみ'}
+                    </span>
+                  </td>
+                  <td data-label="参加日">
+                    {m.joined_at ? new Date(m.joined_at).toLocaleDateString('ja-JP') : '—'}
+                  </td>
+                  {isAdmin && (
+                    <td>
+                      <button className="btn-task-delete"
+                        onClick={() => handleRemoveMember(m.user_id, m.name)}
+                        title="削除">✕</button>
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
 
       {/* 工程一覧 */}
