@@ -539,6 +539,43 @@
 <div class="step"><span class="checkbox checkbox-pass">✓</span>本番URL <code>https://d1a8gn83rnvgqm.cloudfront.net</code> で3ロール動作確認済み</div>
 <div class="step"><strong>本番反映：</strong>2026-07-08 完了（S3+CloudFront `/*` キャッシュ削除+EC2 git pull+PM2 restart）</div>
 
+<h3>10.6 Phase 5-B AWS SESメール通知の実装（2026-07-09）</h3>
+
+<p>遅延判定バッチから、担当者または admin にメール通知する機能を実装。</p>
+
+<h4>AWS SES セットアップ</h4>
+<div class="step"><strong>リージョン：</strong>アジアパシフィック（東京）ap-northeast-1</div>
+<div class="step"><strong>Verified Identity：</strong><code>yurarara.a2u1@gmail.com</code>（Sandboxモード）</div>
+<div class="step"><strong>IAMユーザー：</strong><code>ses-sender-construction-app</code>（<code>AmazonSESFullAccess</code>ポリシー）</div>
+
+<h4>実装したモジュール</h4>
+<table>
+  <tr><th>ファイル</th><th>役割</th></tr>
+  <tr><td><code>backend/src/services/emailService.js</code></td><td>SES SDK の <code>SendEmailCommand</code> をラップ。<code>sendDelayEmail()</code> を提供</td></tr>
+  <tr><td><code>backend/src/batch/delayedCheck.js</code></td><td>notifications 記録に加え、担当者/adminにメール送信を追加。1件失敗しても次に継続</td></tr>
+  <tr><td><code>backend/src/batch/testSes.js</code></td><td>SES疎通テスト用スクリプト（<code>node src/batch/testSes.js</code>で単体実行可）</td></tr>
+</table>
+
+<h4>検証結果</h4>
+<table>
+  <tr><th>環境</th><th>testSes.js</th><th>実バッチ (delayedCheck.js)</th><th>Gmail受信</th></tr>
+  <tr><td>ローカル</td><td class="result-pass">✅ 成功</td><td class="result-pass">✅ 成功</td><td class="result-pass">✅ 受信</td></tr>
+  <tr><td>EC2（本番）</td><td class="result-pass">✅ 成功</td><td class="result-pass">✅ 成功</td><td class="result-pass">✅ 受信</td></tr>
+</table>
+
+<h4>既知の制約</h4>
+<div class="info-box" style="border-left-color:#d80;background:#fff8e0;">
+  <strong>Gmailの迷惑メール判定について</strong><br>
+  送信元が <code>@gmail.com</code> のため、DKIM alignment 不整合により初期状態では迷惑メールに振り分けられがち。<br>
+  <strong>対処：</strong>Gmail側フィルタで件名 <code>[遅延通知]</code> のメールを「迷惑メールにしない」に設定。<br>
+  <strong>根本解決：</strong>独自ドメインを取得しSESで検証すれば解消（今回は学習プロジェクトのため見送り）。
+</div>
+
+<h4>セキュリティ対応</h4>
+<div class="step">スクリーンショットにアクセスキーが写り込んだため、即座にIAMアクセスキーをローテーション（新規発行→旧キー削除）</div>
+
+<div class="step"><strong>本番反映：</strong>2026-07-09 完了（コミット <code>0574e80 feat: AWS SES経由の遅延通知メール送信を実装</code>）</div>
+
 <h2>テスト結果記録</h2>
 
 <table>
@@ -587,6 +624,15 @@
     <td>0件</td>
     <td>課題2（メンバー管理UI）実装＋本番反映。3ロールでローカル・本番動作確認</td>
   </tr>
+  <tr>
+    <td>2026/7/9</td>
+    <td>ゆら</td>
+    <td class="result-pass">6件</td>
+    <td>-</td>
+    <td>-</td>
+    <td>0件</td>
+    <td>Phase 5-B（SESメール通知）実装＋本番反映。ローカル/EC2両方で疎通テスト・実バッチ・Gmail受信を確認</td>
+  </tr>
 </table>
 
 <h2>次回のテストで確認する項目</h2>
@@ -602,7 +648,7 @@
 </ol>
 
 <div class="note" style="margin-top:30px;">
-  ※本ドキュメントはClaude Codeにより自動生成されました（2026年7月2日作成 / 2026年7月3日・7月5日・7月7日・7月8日結果追記）
+  ※本ドキュメントはClaude Codeにより自動生成されました（2026年7月2日作成 / 2026年7月3日・7月5日・7月7日・7月8日・7月9日結果追記）
 </div>
 
 </body>

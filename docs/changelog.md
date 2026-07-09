@@ -6,6 +6,40 @@
 
 ---
 
+## 2026-07-09
+
+### 追加
+
+- **Phase 5-B: AWS SES経由の遅延通知メール送信**
+  - AWS SES セットアップ（東京リージョン、Sandboxモード）
+    - Verified Identity: `yurarara.a2u1@gmail.com`
+    - IAMユーザー `ses-sender-construction-app`（AmazonSESFullAccess）
+  - バックエンド新規/更新
+    - `backend/src/services/emailService.js` 新規（`SendEmailCommand` をラップ）
+    - `backend/src/batch/delayedCheck.js` 更新（担当者 or admin にメール送信を追加、失敗時も次タスクへ継続）
+    - `backend/src/batch/testSes.js` 新規（疎通テスト用スクリプト）
+    - `@aws-sdk/client-ses` を dependency に追加
+  - 環境変数（`.env`）に AWS_REGION / AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY / SES_FROM_EMAIL を追加
+
+### インフラ
+
+- EC2で `git pull` + `npm install` + `.env`更新 + PM2再起動を実施し、本番反映
+- IAM アクセスキーのローテーション実施（漏洩対策のベストプラクティス）
+
+### 検証
+
+- ローカルで `testSes.js` と実バッチ（`delayedCheck.js`）→ Gmail受信を確認
+- EC2上で `testSes.js` と実バッチ → Gmail受信を確認
+- Sandboxモードのため、送信先は検証済みメール（ゆら）のみ
+
+### 既知の制約
+
+- Gmailアドレス（`@gmail.com`）を送信元にしているため、DKIM alignment 不整合で迷惑メール判定されがち
+- 対処：Gmail側フィルタで「[遅延通知]」件名のメールを迷惑メールにしない設定を追加
+- 根本解決には独自ドメインの取得＋SES検証が必要（今回は学習プロジェクトのため見送り）
+
+---
+
 ## 2026-07-08
 
 ### 追加
@@ -140,8 +174,9 @@
 
 - ~~課題1: フロント権限UIの不完全性~~ → 2026-07-07 本番反映
 - ~~課題2: `project_members`管理UIがない~~ → 2026-07-08 本番反映
+- ~~Phase 5-B: SESメール通知機能~~ → 2026-07-09 本番反映（Sandboxモード）
 
 ## 今後の予定
 
-- Phase 5-B: SESメール通知機能
+- 独自ドメイン取得＋SES本番アクセス申請（迷惑メール判定回避）
 - 未検証のテスト項目（実機タッチ操作、バリデーション異常系など）
