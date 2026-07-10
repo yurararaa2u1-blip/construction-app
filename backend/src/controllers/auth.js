@@ -24,6 +24,10 @@ const register = async (req, res) => {
       return errRes(res, 400, 'Bad Request', '名前・メール・パスワードは必須です');
     }
 
+    if (password.length < 8) {
+      return errRes(res, 400, 'Bad Request', 'パスワードは8文字以上で設定してください');
+    }
+
     // メール重複チェック（deleted_at に関わらず同一メールは登録不可）
     const dup = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
     if (dup.rows.length > 0) {

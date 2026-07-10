@@ -64,7 +64,8 @@ function Register() {
               value={password}
               onChange={e => setPassword(e.target.value)}
               required
-              placeholder="8文字以上推奨"
+              minLength={8}
+              placeholder="8文字以上"
             />
           </div>
           <button type="submit" className="btn btn-primary btn-block">登録する</button>
