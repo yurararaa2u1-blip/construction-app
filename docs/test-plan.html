@@ -254,7 +254,7 @@
 </table>
 <div class="step"><span class="checkbox checkbox-pass">✓</span>正常系: 新規登録が成功する<span class="step-note">ゆら/テスト監督/テスト閲覧/テスト一覧の4名で確認</span></div>
 <div class="step"><span class="checkbox checkbox-pass">✓</span>異常系: 既に登録済みのメールで登録するとエラー<span class="step-note">「このメールアドレスはすでに登録されています」表示</span></div>
-<div class="step"><span class="checkbox checkbox-untested">-</span>異常系: パスワードが短すぎる場合エラー<span class="step-note">未検証</span></div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>異常系: パスワードが短すぎる場合エラー<span class="step-note">2026-07-10 検証。初回発見時は未実装だったためバリデーションを追加（backend: password.length&lt;8で400、frontend: minLength=8）。本番反映後、フロント/バックエンド両方で3文字は拒否、8文字以上は登録可能を確認</span></div>
 
 <h3>1.2 ログイン</h3>
 <table>
@@ -314,7 +314,7 @@
   <tr><td>手順</td><td>「+ 新規作成」→ 現場名・住所・工期・ステータス入力 → 「作成する」</td></tr>
   <tr><td>期待結果</td><td>作成成功→現場一覧に表示される</td></tr>
 </table>
-<div class="step"><span class="checkbox checkbox-untested">-</span>必須項目未入力でバリデーションエラー<span class="step-note">未検証</span></div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>必須項目未入力でバリデーションエラー<span class="step-note">2026-07-10 検証。HTML5 required属性で送信ブロック（フロント）、バックエンドでも空チェック済み。2段階の防御が機能</span></div>
 <div class="step"><span class="checkbox checkbox-pass">✓</span>正常データで作成成功<span class="step-note">「大阪駅ビル新築工事」で確認</span></div>
 
 <h3>3.2 現場一覧表示</h3>
@@ -341,7 +341,7 @@
   <tr><td>期待結果</td><td>タスクがガントチャートに追加される</td></tr>
 </table>
 <div class="step"><span class="checkbox checkbox-pass">✓</span>タスクを複数作成できる<span class="step-note">基礎工事/配管工事/内装工事/屋根工事の4件で確認</span></div>
-<div class="step"><span class="checkbox checkbox-untested">-</span>予定終了日が予定開始日より前の場合エラー<span class="step-note">未検証</span></div>
+<div class="step"><span class="checkbox checkbox-code">C</span>予定終了日が予定開始日より前の場合エラー<span class="step-note">2026-07-10 検証。バリデーション未実装のバグを発見（planned_end&lt;planned_startでも作成できる）。優先度低のため後日対応予定として記録</span></div>
 
 <h3>4.2 タスク一覧表示</h3>
 <div class="step"><span class="checkbox checkbox-pass">✓</span>作成したタスクが一覧・ガントチャートに表示される</div>
@@ -641,6 +641,15 @@
     <td>-</td>
     <td>0件</td>
     <td>赤セクション（データ整合性・権限・遅延判定境界）を検証。現場編集・論理削除（deleted_at）・supervisor→adminロール変更・遅延判定境界値（今日期限）すべて合格</td>
+  </tr>
+  <tr>
+    <td>2026/7/10（追加）</td>
+    <td>ゆら</td>
+    <td class="result-pass">2件</td>
+    <td class="result-partial">1件</td>
+    <td>-</td>
+    <td>0件</td>
+    <td>黄セクション（バリデーション）を検証。パスワード短さバリデーションの未実装バグを発見→実装＆本番反映＆再検証で合格。必須項目未入力はHTML5+バックエンドで合格。日付逆順は未実装バグとして記録（後日対応）</td>
   </tr>
 </table>
 
