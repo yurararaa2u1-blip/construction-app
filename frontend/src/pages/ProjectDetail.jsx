@@ -123,6 +123,10 @@ function ProjectDetail() {
   const handleAddTask = async (e) => {
     e.preventDefault();
     setTaskError('');
+    if (new Date(plannedEnd) < new Date(plannedStart)) {
+      setTaskError('予定完了日は予定開始日以降の日付にしてください');
+      return;
+    }
     try {
       await client.post(`/api/projects/${id}/tasks`, {
         name: taskName, planned_start: plannedStart, planned_end: plannedEnd,

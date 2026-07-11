@@ -64,6 +64,10 @@ const createTask = async (req, res) => {
       return errRes(res, 400, 'Bad Request', '工程名・予定開始日・予定完了日は必須です');
     }
 
+    if (new Date(planned_end) < new Date(planned_start)) {
+      return errRes(res, 400, 'Bad Request', '予定完了日は予定開始日以降の日付にしてください');
+    }
+
     // 作成時点で is_delayed を計算する
     const is_delayed = calcIsDelayed(planned_end, 0);
 
@@ -121,8 +125,14 @@ const updateTask = async (req, res) => {
     } = req.body;
 
     // 送られた値を使い、未送信は現在値を維持（部分更新）
-    const newPlannedEnd = planned_end !== undefined ? planned_end : task.planned_end;
-    const newProgress   = progress   !== undefined ? Number(progress) : task.progress;
+    const newPlannedStart = planned_start !== undefined ? planned_start : task.planned_start;
+    const newPlannedEnd   = planned_end   !== undefined ? planned_end   : task.planned_end;
+    const newProgress     = progress      !== undefined ? Number(progress) : task.progress;
+
+    // 更新後の開始日・完了日が逆順にならないかチェック
+    if (new Date(newPlannedEnd) < new Date(newPlannedStart)) {
+      return errRes(res, 400, 'Bad Request', '予定完了日は予定開始日以降の日付にしてください');
+    }
 
     // is_delayed の自動再計算
     const new_is_delayed = calcIsDelayed(newPlannedEnd, newProgress);
