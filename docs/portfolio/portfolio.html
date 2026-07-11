@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>建築工事工程管理システム — 開発ポートフォリオ</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+    line-height: 1.7;
+    color: #2c3e50;
+    background: #f5f6f8;
+    padding: 40px 20px;
+  }
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 60px;
+    border-radius: 8px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  }
+  .cover {
+    text-align: center;
+    padding: 20px 0 40px;
+    border-bottom: 3px solid #1e3a5f;
+    margin-bottom: 40px;
+  }
+  .cover h1 {
+    font-size: 28pt;
+    color: #1e3a5f;
+    margin-bottom: 12px;
+    font-weight: 800;
+  }
+  .cover .subtitle {
+    font-size: 12pt;
+    color: #7f8c8d;
+    margin-bottom: 24px;
+  }
+  .cover .meta {
+    display: inline-block;
+    text-align: left;
+    background: #f8f9fb;
+    padding: 16px 24px;
+    border-radius: 6px;
+    font-size: 10.5pt;
+  }
+  .cover .meta strong {
+    display: inline-block;
+    width: 110px;
+    color: #1e3a5f;
+  }
+  h2 {
+    font-size: 20pt;
+    color: #1e3a5f;
+    margin: 40px 0 16px;
+    padding: 10px 16px;
+    background: #eef2f7;
+    border-left: 5px solid #1e3a5f;
+    border-radius: 3px;
+  }
+  h3 {
+    font-size: 14pt;
+    color: #2c3e50;
+    margin: 28px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #dfe4ea;
+  }
+  h4 {
+    font-size: 12pt;
+    color: #34495e;
+    margin: 20px 0 10px;
+  }
+  p {
+    margin-bottom: 12px;
+    font-size: 11pt;
+  }
+  ul, ol {
+    margin-left: 24px;
+    margin-bottom: 12px;
+  }
+  ul li, ol li {
+    font-size: 11pt;
+    margin-bottom: 6px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 20px;
+    font-size: 10.5pt;
+  }
+  th, td {
+    border: 1px solid #dfe4ea;
+    padding: 8px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: #1e3a5f;
+    color: #fff;
+    font-weight: 600;
+  }
+  tr:nth-child(even) td {
+    background: #f8f9fb;
+  }
+  code {
+    background: #f0f2f5;
+    color: #d63031;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: "Consolas", "Menlo", monospace;
+    font-size: 90%;
+  }
+  pre {
+    background: #2d3748;
+    color: #e2e8f0;
+    padding: 16px 20px;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin: 12px 0 20px;
+    font-family: "Consolas", "Menlo", monospace;
+    font-size: 10pt;
+    line-height: 1.5;
+  }
+  pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+  }
+  .toc {
+    background: #f8f9fb;
+    border: 1px solid #dfe4ea;
+    padding: 20px 24px;
+    border-radius: 6px;
+    margin: 24px 0;
+  }
+  .toc ol {
+    margin-left: 20px;
+  }
+  .toc a {
+    color: #1e3a5f;
+    text-decoration: none;
+  }
+  .toc a:hover {
+    text-decoration: underline;
+  }
+  .info-box {
+    background: #eef2f7;
+    border-left: 4px solid #1e3a5f;
+    padding: 14px 18px;
+    margin: 16px 0;
+    border-radius: 3px;
+    font-size: 10.5pt;
+  }
+  .warning-box {
+    background: #fff8e0;
+    border-left: 4px solid #d80;
+    padding: 14px 18px;
+    margin: 16px 0;
+    border-radius: 3px;
+    font-size: 10.5pt;
+  }
+  .success-box {
+    background: #e8f5e8;
+    border-left: 4px solid #2e8b57;
+    padding: 14px 18px;
+    margin: 16px 0;
+    border-radius: 3px;
+    font-size: 10.5pt;
+  }
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin: 16px 0 24px;
+  }
+  .metric-card {
+    background: linear-gradient(135deg, #1e3a5f, #2c5282);
+    color: #fff;
+    padding: 18px 20px;
+    border-radius: 6px;
+    text-align: center;
+  }
+  .metric-card .label {
+    font-size: 9pt;
+    opacity: 0.85;
+    margin-bottom: 4px;
+  }
+  .metric-card .value {
+    font-size: 22pt;
+    font-weight: 800;
+  }
+  .metric-card .unit {
+    font-size: 10pt;
+    opacity: 0.85;
+    margin-left: 4px;
+  }
+  .tech-card {
+    background: #f8f9fb;
+    border: 1px solid #dfe4ea;
+    padding: 16px 20px;
+    border-radius: 6px;
+    margin: 16px 0;
+  }
+  .tech-card h4 {
+    margin-top: 0;
+    color: #1e3a5f;
+  }
+  .tech-card p {
+    font-size: 10.5pt;
+    margin-bottom: 8px;
+  }
+  .tech-card .tag {
+    display: inline-block;
+    background: #1e3a5f;
+    color: #fff;
+    font-size: 9pt;
+    padding: 3px 10px;
+    border-radius: 12px;
+    margin-right: 6px;
+    margin-top: 6px;
+  }
+  .placeholder-img {
+    background: #f0f2f5;
+    border: 2px dashed #bcc4cd;
+    color: #7f8c8d;
+    padding: 40px 20px;
+    text-align: center;
+    border-radius: 6px;
+    margin: 12px 0 20px;
+    font-size: 10pt;
+    font-style: italic;
+  }
+  .footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid #dfe4ea;
+    text-align: center;
+    color: #7f8c8d;
+    font-size: 9.5pt;
+  }
+  .section-divider {
+    height: 2px;
+    background: linear-gradient(to right, transparent, #dfe4ea, transparent);
+    margin: 48px 0;
+  }
+  strong {
+    color: #1e3a5f;
+    font-weight: 700;
+  }
+  a {
+    color: #1e3a5f;
+  }
+  @media print {
+    body { background: #fff; padding: 0; }
+    .container { box-shadow: none; padding: 30px; }
+    h2 { break-before: page; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="cover">
+  <h1>建築工事工程管理システム</h1>
+  <div class="subtitle">Construction Project Progress Management System<br>—— 開発ポートフォリオ ——</div>
+  <div class="meta">
+    <div><strong>作者：</strong>ryuunennsakura</div>
+    <div><strong>開発期間：</strong>2026年6月24日 〜 2026年7月11日（実質18日間）</div>
+    <div><strong>リポジトリ：</strong><a href="https://github.com/yurararaa2u1-blip/construction-app">github.com/yurararaa2u1-blip/construction-app</a></div>
+    <div><strong>本番URL：</strong><a href="https://d1a8gn83rnvgqm.cloudfront.net">d1a8gn83rnvgqm.cloudfront.net</a></div>
+  </div>
+</div>
+
+<div class="toc">
+  <h3 style="margin-top:0;border:none;padding-bottom:0;">📑 目次</h3>
+  <ol>
+    <li><a href="#s1">プロジェクト概要</a></li>
+    <li><a href="#s2">作った機能の説明</a></li>
+    <li><a href="#s3">システム構成（アーキテクチャ）</a></li>
+    <li><a href="#s4">使用した技術スタックと説明</a></li>
+    <li><a href="#s5">プロジェクトで学んだこと・専門スキル</a></li>
+    <li><a href="#s6">苦労したこと・解決方法・工夫点</a></li>
+    <li><a href="#s7">プロジェクトの数値サマリー</a></li>
+    <li><a href="#s8">今後の課題・改善予定</a></li>
+    <li><a href="#s9">開発の進め方（振り返り）</a></li>
+    <li><a href="#s10">付録：主なコミット履歴</a></li>
+  </ol>
+</div>
+
+<h2 id="s1">1. プロジェクト概要</h2>
+
+<h3>1-1. 一言でいうと</h3>
+<p><strong>建築工事現場の「進捗管理」と「遅延通知」をブラウザとメールでできるWebアプリ</strong>です。</p>
+
+<h3>1-2. 課題（なぜ作ったか）</h3>
+<p>建築工事の現場では、以下のような課題があります。</p>
+<ul>
+  <li><strong>進捗が現場ごとにバラバラ管理</strong>：紙、Excel、ホワイトボードなど属人的</li>
+  <li><strong>遅延の発見が遅い</strong>：気付いた時には手遅れ</li>
+  <li><strong>情報共有が非効率</strong>：管理者と現場監督の間で情報が伝わりにくい</li>
+</ul>
+<p>このアプリはこの3つを「<strong>ブラウザで一元管理し、遅延を自動検知してメール通知する</strong>」ことで解決します。</p>
+
+<h3>1-3. ターゲットユーザー</h3>
+<p>以下の3つの役割（ロール）を想定して設計しました。</p>
+<table>
+  <tr><th>ロール</th><th>実際の職種イメージ</th><th>できること</th></tr>
+  <tr><td>管理者（admin）</td><td>建築会社の管理職</td><td>全機能（現場・工程・メンバー・ユーザー管理）</td></tr>
+  <tr><td>現場監督（supervisor）</td><td>現場の責任者</td><td>現場閲覧、担当工程の進捗更新</td></tr>
+  <tr><td>閲覧のみ（viewer）</td><td>クライアント・関係者</td><td>閲覧のみ、更新不可</td></tr>
+</table>
+
+<h3>1-4. 主な特徴</h3>
+<ul>
+  <li>📱 スマホ・PCどちらでも使える（レスポンシブ対応）</li>
+  <li>🔒 JWT認証でセキュアなログイン</li>
+  <li>📧 遅延タスクを自動検知してメール通知（AWS SES）</li>
+  <li>⚙️ 役割ごとに画面と機能が変わる（RBAC / 権限制御）</li>
+  <li>🌐 AWSクラウドで本番稼働中（EC2 + RDS + S3 + CloudFront）</li>
+</ul>
+
+<div class="section-divider"></div>
+
+<h2 id="s2">2. 作った機能の説明</h2>
+
+<h3>2-1. 機能一覧</h3>
+<table>
+  <tr><th>#</th><th>機能</th><th>概要</th></tr>
+  <tr><td>1</td><td>ユーザー登録・ログイン</td><td>メール・パスワードで認証</td></tr>
+  <tr><td>2</td><td>役割ベースの権限制御</td><td>3ロールで画面と操作を制限</td></tr>
+  <tr><td>3</td><td>現場管理（CRUD）</td><td>現場の作成・編集・削除（論理削除）</td></tr>
+  <tr><td>4</td><td>メンバー管理</td><td>現場ごとに担当メンバーを設定</td></tr>
+  <tr><td>5</td><td>工程管理（CRUD）</td><td>工程の作成・進捗更新・削除</td></tr>
+  <tr><td>6</td><td>遅延自動判定</td><td>期限切れかつ未完了を自動でフラグ付け</td></tr>
+  <tr><td>7</td><td>バッチ処理</td><td>毎日0時に全工程を判定</td></tr>
+  <tr><td>8</td><td>メール通知</td><td>遅延タスクを担当者にメール送信</td></tr>
+  <tr><td>9</td><td>ダッシュボード</td><td>現場数・遅延数・完了数・平均進捗を集計表示</td></tr>
+  <tr><td>10</td><td>ユーザー管理</td><td>管理者が他ユーザーの役割変更・削除</td></tr>
+</table>
+
+<h3>2-2. 主要画面</h3>
+
+<h4>📊 ダッシュボード画面（S-02）</h4>
+<p>ログイン後の最初の画面。総現場数・遅延中・完了・平均進捗率のKPIを表示します。</p>
+<div class="placeholder-img">📸 [ここにダッシュボード画面のスクリーンショット]<br>撮影ポイント: adminログイン後のダッシュボード。3つの現場数KPIと現場一覧テーブルが写るように</div>
+
+<h4>🏗 現場一覧・現場詳細画面（S-03, S-05）</h4>
+<ul>
+  <li>一覧では全現場の進捗バーとステータスバッジを表示</li>
+  <li>詳細画面では現場情報の編集、メンバー管理、工程一覧を1画面で操作可能</li>
+  <li>admin/supervisor/viewer で表示される機能が変わる</li>
+</ul>
+<div class="placeholder-img">📸 [ここに現場詳細画面のスクリーンショット]<br>撮影ポイント: 「大阪駅ビル新築工事」の現場詳細画面</div>
+
+<h4>📅 工程管理画面（S-04）</h4>
+<ul>
+  <li>工程を一覧表示</li>
+  <li><strong>進捗率をリアルタイム更新</strong>（0-100%）</li>
+  <li>遅延中の工程は赤色バッジで警告</li>
+</ul>
+
+<h4>👥 ユーザー管理画面（S-08）</h4>
+<ul>
+  <li>全ユーザーとロールを一覧表示</li>
+  <li>管理者はロールを変更可能（例：現場監督 → 管理者）</li>
+  <li>「最後の管理者を降格させない」などの安全ガード付き</li>
+</ul>
+
+<h3>2-3. 特徴的な機能：遅延自動判定＋メール通知</h3>
+<div class="info-box">
+このアプリのコア機能です。<br>
+<strong>ロジック</strong>：「予定完了日 &lt; 今日」かつ「進捗 &lt; 100%」→ 遅延と判定<br>
+<strong>タイミング</strong>：進捗更新時にリアルタイム、加えて毎日深夜0時にバッチで全工程を強制チェック<br>
+<strong>通知</strong>：notifications テーブルに記録 → AWS SES 経由でメール送信 → Gmail着信
+</div>
+
+<div class="section-divider"></div>
+
+<h2 id="s3">3. システム構成（アーキテクチャ）</h2>
+
+<h3>3-1. 全体像</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                        ユーザー                              │
+│                    （PC / スマホ）                           │
+└────────────────────────────┬────────────────────────────────┘
+                             │ HTTPS
+                             ▼
+    ┌──────────────────────────────────────────────────┐
+    │  AWS CloudFront（CDN）                            │
+    │  - フロント配信: d1a8gn83rnvgqm.cloudfront.net    │
+    │  - API配信:     d2sqygsot7k84c.cloudfront.net    │
+    └────────┬─────────────────────────┬─────────────────┘
+             │                          │
+             │ 静的ファイル             │ APIリクエスト
+             ▼                          ▼
+    ┌────────────────┐         ┌────────────────────────┐
+    │  AWS S3        │         │  AWS EC2               │
+    │  (React build) │         │  Node.js + Express     │
+    │                │         │  PM2で常駐実行         │
+    └────────────────┘         └──────────┬─────────────┘
+                                          │
+                             ┌────────────┼──────────┐
+                             ▼            ▼          ▼
+                    ┌───────────────┐  ┌─────┐  ┌─────────┐
+                    │  AWS RDS      │  │ SES │  │ Cron    │
+                    │  PostgreSQL   │  │(メ  │  │ (バッチ)│
+                    └───────────────┘  └─────┘  └─────────┘</code></pre>
+
+<h3>3-2. データフロー例：ユーザーが進捗を更新する時</h3>
+<ol>
+  <li>ユーザーがブラウザで進捗率を50→75%に変更</li>
+  <li>Reactが <code>PATCH /api/tasks/:id</code> をJWT付きで送信</li>
+  <li>CloudFront → EC2 の Express にリクエストが到達</li>
+  <li>認証ミドルウェアがJWTを検証</li>
+  <li>権限チェック（admin または supervisor か？）</li>
+  <li>コントローラーが RDS の tasks テーブルを UPDATE</li>
+  <li><code>is_delayed</code> を再計算（期限切れ？進捗100%未満？）</li>
+  <li>更新結果をJSONで返す</li>
+  <li>Reactが画面のプログレスバーを更新</li>
+</ol>
+
+<h3>3-3. データベース設計</h3>
+<p><strong>5つのテーブル</strong>で構成されています。</p>
+<table>
+  <tr><th>テーブル</th><th>主なカラム</th><th>役割</th></tr>
+  <tr><td>users</td><td>id, name, email, password_hash, role, deleted_at</td><td>ユーザー情報</td></tr>
+  <tr><td>projects</td><td>id, name, address, start_date, end_date, status, created_by, deleted_at</td><td>現場情報</td></tr>
+  <tr><td>project_members</td><td>project_id, user_id, role, joined_at</td><td>現場のメンバー</td></tr>
+  <tr><td>tasks</td><td>id, project_id, name, planned_end, progress, is_delayed, assigned_to</td><td>工程</td></tr>
+  <tr><td>notifications</td><td>id, user_id, project_id, task_id, type, message, is_read</td><td>通知履歴</td></tr>
+</table>
+
+<div class="success-box">
+<strong>設計上のこだわり</strong>：
+<ul style="margin-top:8px;">
+  <li>主キーは全て <strong>UUID</strong>（連番IDより推測されにくく、分散環境で衝突しない）</li>
+  <li>削除は <strong>論理削除</strong>（<code>deleted_at</code> にタイムスタンプ）で復元可能</li>
+  <li>パスワードは <strong>bcrypt</strong> でハッシュ化（<code>password_hash</code>に保存、平文は不可）</li>
+</ul>
+</div>
+
+<div class="section-divider"></div>
+
+<h2 id="s4">4. 使用した技術スタックと説明</h2>
+<p>初学者にもわかるように、<strong>「これは何？」「なぜ選んだ？」「今回どう使った？」</strong> の3点で説明します。</p>
+
+<h3>4-1. フロントエンド</h3>
+
+<div class="tech-card">
+  <h4>🎨 React</h4>
+  <p><strong>これは何？</strong>：Facebook（現Meta）が開発した、ユーザーインターフェース構築のためのJavaScriptライブラリ。世界で最も使われているフロントエンド技術の1つ。「コンポーネント」という部品を組み合わせて画面を作る。</p>
+  <p><strong>なぜ選んだ？</strong>：圧倒的なシェアで情報量が多い、求人でも需要が高い、Meta・Netflix・Airbnbなど大手が採用。</p>
+  <p><strong>今回どう使った？</strong>：8つの画面すべてをReactで構築。<code>useState</code>で入力フォームの値管理、<code>useEffect</code>でデータ取得タイミングを制御、<code>react-router-dom</code>で画面遷移。</p>
+  <span class="tag">JavaScript</span><span class="tag">Component</span><span class="tag">Hooks</span><span class="tag">SPA</span>
+</div>
+
+<div class="tech-card">
+  <h4>🎨 Tailwind CSS + カスタムCSS</h4>
+  <p><strong>これは何？</strong>：「クラス名を指定するだけでスタイルが当たる」CSSフレームワーク。例：<code>&lt;button class="bg-blue-500 text-white px-4 py-2"&gt;</code>。</p>
+  <p><strong>なぜ選んだ？</strong>：素早く見栄えの良いUIが作れる、ダークテーマ・レスポンシブが容易、業界で標準化してきている。</p>
+  <p><strong>今回どう使った？</strong>：コーポレート系のカラースキーム統一、スマホ・PC対応（768px幅で切り替え）、ハンバーガーメニュー実装。</p>
+  <span class="tag">CSS</span><span class="tag">Responsive</span>
+</div>
+
+<h3>4-2. バックエンド</h3>
+
+<div class="tech-card">
+  <h4>🟢 Node.js + Express</h4>
+  <p><strong>これは何？</strong>：Node.jsはJavaScriptをサーバー側で動かす実行環境。ExpressはNode.jsで最も使われるWebフレームワーク。リクエストを受け取ってレスポンスを返す仕組みを提供。</p>
+  <p><strong>なぜ選んだ？</strong>：フロントとバックが同じ言語（JavaScript）で書ける、起動が速く非同期処理が得意、npmで豊富なライブラリが使える。</p>
+  <p><strong>今回どう使った？</strong>：REST APIを16個実装（認証・現場・工程・メンバー・通知など）、ミドルウェアで認証チェックを共通化、ルーティングをファイル分割して保守性向上。</p>
+  <span class="tag">JavaScript</span><span class="tag">REST API</span><span class="tag">Middleware</span>
+</div>
+
+<div class="tech-card">
+  <h4>🔒 JWT（JSON Web Token）</h4>
+  <p><strong>これは何？</strong>：「あなたは誰か」を証明する電子的な札のようなもの。サーバーで発行され、クライアントは以降のAPIリクエストにこれを添えて送る。</p>
+  <p><strong>なぜ選んだ？</strong>：サーバー側で状態を持たなくてよい（ステートレス）、複数サーバーに分散しても動く、モダンなアプリの標準的な認証方式。</p>
+  <p><strong>今回どう使った？</strong>：ログイン成功時にJWTを発行（有効期限24時間）、フロント側はlocalStorageに保存、全APIリクエストのヘッダーに付ける、期限切れは自動でログイン画面へリダイレクト。</p>
+  <span class="tag">Authentication</span><span class="tag">Stateless</span>
+</div>
+
+<div class="tech-card">
+  <h4>🔐 bcrypt</h4>
+  <p><strong>これは何？</strong>：パスワードを安全に保存するためのハッシュ化ライブラリ。パスワードから「元に戻せない文字列」を生成する。「わざと遅い」設計になっており、総当たり攻撃に強い。</p>
+  <p><strong>なぜ選んだ？</strong>：パスワードは絶対に平文で保存してはいけない。bcryptはセキュリティ業界のデファクトスタンダード。</p>
+  <p><strong>今回どう使った？</strong>：登録時に入力パスワードをbcryptでハッシュ化してDBに保存、ログイン時に入力パスワードのハッシュとDBの値を比較。</p>
+  <span class="tag">Security</span><span class="tag">Hash</span>
+</div>
+
+<h3>4-3. データベース</h3>
+
+<div class="tech-card">
+  <h4>🗄 PostgreSQL</h4>
+  <p><strong>これは何？</strong>：世界で最も高機能なオープンソースのリレーショナルデータベース。SQLでデータを操作。Amazon・Instagram・Redditなど大規模サービスでも採用。</p>
+  <p><strong>なぜ選んだ？</strong>：無料で使える、高機能（トランザクション・外部キー・インデックスなど本格機能が全て使える）、JSONBデータ型で柔軟なデータも扱える、AWS RDSで本番運用しやすい。</p>
+  <p><strong>今回どう使った？</strong>：5テーブル設計、外部キー制約でデータ整合性を保証、UUID主キーで安全性向上、論理削除パターンでデータ復元可能。</p>
+  <span class="tag">RDBMS</span><span class="tag">SQL</span><span class="tag">Open Source</span>
+</div>
+
+<h3>4-4. インフラ（AWS）</h3>
+
+<div class="tech-card">
+  <h4>☁️ AWS EC2</h4>
+  <p><strong>これは何？</strong>：AWSのVPS（仮想プライベートサーバー）。クラウド上に立ち上げる「自分専用のパソコン」のようなもの。Node.jsサーバーを常時稼働させる場所。</p>
+  <p><strong>今回どう使った？</strong>：t3.micro（無料枠内）でLinux（Amazon Linux 2023）を起動、Node.js v20 とPostgreSQLクライアントをインストール、PM2でNode.jsを常時起動、<strong>Elastic IP</strong>で固定IPを取得。</p>
+  <span class="tag">Cloud</span><span class="tag">Linux</span><span class="tag">VPS</span>
+</div>
+
+<div class="tech-card">
+  <h4>🗄 AWS RDS</h4>
+  <p><strong>これは何？</strong>：AWSが提供するマネージド型データベースサービス。自分でPostgreSQLをインストール・管理しなくてよい。バックアップ、パッチ適用も自動。</p>
+  <p><strong>今回どう使った？</strong>：db.t3.micro（無料枠内）でPostgreSQL 18を起動、SSL接続（sslmode=require）で暗号化通信、セキュリティグループでEC2からのみアクセス許可。</p>
+  <span class="tag">Managed DB</span><span class="tag">SSL</span>
+</div>
+
+<div class="tech-card">
+  <h4>📁 AWS S3</h4>
+  <p><strong>これは何？</strong>：Amazonのオブジェクトストレージサービス。ファイル置き場（クラウド上のフォルダ）。静的Webサイトのホスティングもできる。</p>
+  <p><strong>今回どう使った？</strong>：Reactの本番ビルド成果物（HTML/JS/CSS）を配置、CloudFront経由で配信。</p>
+  <span class="tag">Storage</span><span class="tag">Static Hosting</span>
+</div>
+
+<div class="tech-card">
+  <h4>🌐 AWS CloudFront</h4>
+  <p><strong>これは何？</strong>：AWSのCDN（Content Delivery Network）。世界中のサーバーにファイルをキャッシュして高速配信。HTTPSの自動対応、DDoS保護なども付いてくる。</p>
+  <p><strong>今回どう使った？</strong>：<strong>フロント用</strong>はS3から静的ファイルをHTTPS配信、<strong>API用</strong>はEC2のHTTPをHTTPS化して配信（Mixed Content対策）、キャッシュ削除機能で本番デプロイ。</p>
+  <span class="tag">CDN</span><span class="tag">HTTPS</span><span class="tag">Cache</span>
+</div>
+
+<div class="tech-card">
+  <h4>📧 AWS SES</h4>
+  <p><strong>これは何？</strong>：Amazon Simple Email Service。プログラムから信頼性の高いメールを送信できるサービス。Amazonの評価済みIPから送るので迷惑メールになりにくい。</p>
+  <p><strong>今回どう使った？</strong>：遅延通知メールの送信、Sandboxモード（検証済みメールにのみ送信可）で運用、<code>@aws-sdk/client-ses</code>でNode.jsから利用、IAMユーザーとアクセスキーで認証。</p>
+  <span class="tag">Email</span><span class="tag">SDK</span>
+</div>
+
+<h3>4-5. 開発ツール</h3>
+<table>
+  <tr><th>ツール</th><th>用途</th></tr>
+  <tr><td>Git / GitHub</td><td>バージョン管理・コード共有</td></tr>
+  <tr><td>VS Code</td><td>エディタ</td></tr>
+  <tr><td>PM2</td><td>Node.jsプロセス常駐管理（EC2上）</td></tr>
+  <tr><td>PowerShell</td><td>ローカル開発でのターミナル</td></tr>
+  <tr><td>DBeaver / psql</td><td>DB管理</td></tr>
+  <tr><td>Postman / curl</td><td>API動作確認</td></tr>
+</table>
+
+<div class="section-divider"></div>
+
+<h2 id="s5">5. プロジェクトで学んだこと・専門スキル</h2>
+
+<h3>5-1. フルサイクル開発の経験</h3>
+<p>このプロジェクトで<strong>「企画→設計→実装→テスト→デプロイ→運用→改善」の全工程</strong>を経験しました。</p>
+
+<pre><code>[企画]     ── 現場管理の課題定義
+[設計]     ── 設計書（4ドキュメント）で仕様固め
+[実装]     ── バックエンド → フロント → バッチ処理
+[テスト]   ── 手動テスト計画書に沿って検証
+[デプロイ] ── AWS EC2/RDS/S3/CloudFront/SES で本番構築
+[運用]     ── PM2自動起動、ログ管理、コスト管理
+[改善]     ── バグ発見→修正→再デプロイのサイクル</code></pre>
+
+<h3>5-2. 具体的に身についた技術スキル</h3>
+
+<h4>フロントエンド</h4>
+<ul>
+  <li>Reactでのコンポーネント設計とstate管理</li>
+  <li>カスタムフックで認証状態を管理する設計</li>
+  <li>Axiosインターセプターで共通処理（401リダイレクト）</li>
+  <li>レスポンシブデザイン（ハンバーガーメニューなど）</li>
+</ul>
+
+<h4>バックエンド</h4>
+<ul>
+  <li>REST API設計と実装（16エンドポイント）</li>
+  <li>JWT認証の実装</li>
+  <li>bcryptによるパスワードハッシュ化</li>
+  <li>ミドルウェアパターン（認証・エラーハンドリング）</li>
+  <li>バッチ処理の実装（node-cronで定期実行）</li>
+</ul>
+
+<h4>データベース</h4>
+<ul>
+  <li>正規化されたスキーマ設計</li>
+  <li>外部キー制約と論理削除の使い分け</li>
+  <li>UUID主キーの活用</li>
+  <li>SQLインジェクション対策（パラメータ化クエリ）</li>
+</ul>
+
+<h4>インフラ・クラウド</h4>
+<ul>
+  <li>AWS EC2でのLinuxサーバー構築</li>
+  <li>AWS RDSでのDB運用（SSL接続、SGルール）</li>
+  <li>S3 + CloudFrontでのSPAホスティング</li>
+  <li>CloudFrontでAPIをHTTPS化してMixed Content問題を回避</li>
+  <li><strong>AWS SES</strong>でメール送信（Sandbox運用の理解）</li>
+  <li><strong>Elastic IP</strong>でIP固定化</li>
+  <li>SSH接続、SSHキーの管理</li>
+  <li>PM2 + systemdで永続化</li>
+</ul>
+
+<h4>セキュリティ</h4>
+<ul>
+  <li>パスワードハッシュ化（bcrypt）</li>
+  <li>JWTの有効期限管理</li>
+  <li>CORS設定</li>
+  <li>SSL/TLS通信の理解</li>
+  <li><strong>IAMアクセスキーの管理・ローテーション</strong>（漏洩発見時に実施）</li>
+  <li>論理削除でデータ復元可能な設計</li>
+  <li>認証UI迂回への対策（フロント＋バック両方でチェック）</li>
+</ul>
+
+<h4>開発プロセス</h4>
+<ul>
+  <li>Gitでの適切なコミット粒度</li>
+  <li>コミットメッセージの書き方（feat/fix/docs/chore プレフィックス）</li>
+  <li>設計書ベースの実装</li>
+  <li>テスト計画書に基づく体系的なテスト</li>
+  <li>CHANGELOG.mdでの変更履歴管理</li>
+</ul>
+
+<h3>5-3.「仕組み理解」の深まり</h3>
+<p>コードを書くだけでなく、<strong>「なぜこう動くのか」</strong>を理解する経験になりました。</p>
+<ul>
+  <li><strong>HTTP通信の仕組み</strong>：リクエスト・レスポンス、ヘッダー、CORS</li>
+  <li><strong>JWTの中身</strong>：Base64エンコードされた3つのセクション、署名検証</li>
+  <li><strong>CloudFrontのキャッシュ</strong>：エッジロケーション、キャッシュ削除の仕組み</li>
+  <li><strong>DNS</strong>：ドメイン名からIPアドレスへの解決</li>
+  <li><strong>HTTPS/TLS</strong>：証明書による暗号化</li>
+  <li><strong>PostgreSQLのトランザクション</strong>：ACIDの意味と挙動</li>
+</ul>
+
+<div class="section-divider"></div>
+
+<h2 id="s6">6. 苦労したこと・解決方法・工夫点</h2>
+<p>このセクションは面接での「困った経験を教えてください」という質問への準備でもあります。</p>
+
+<h3>6-1. Mixed Content問題</h3>
+<div class="warning-box">
+<strong>問題</strong>：CloudFront経由でフロント（HTTPS）を配信していたが、バックエンドEC2はhttp://でしか動かない。ブラウザが「HTTPSページからhttp://のAPIを叩くのはブロックする」と拒否。
+</div>
+<p><strong>原因の理解</strong>：Mixed Content（混在コンテンツ）といい、ブラウザのセキュリティ機能。HTTPSページに読み込まれる内容は全てHTTPSでなければならない。</p>
+<div class="success-box">
+<strong>解決策</strong>：CloudFrontを<strong>API用にもう1つ作成</strong>（<code>d2sqygsot7k84c.cloudfront.net</code>）。CloudFrontが受けたHTTPSリクエストをEC2のHTTPに変換。結果：ブラウザはHTTPSしか使わないのでMixed Content解消。
+</div>
+<p><strong>学んだこと</strong>：HTTPSの本質的な意味、CDNは「速く配信」だけでなく「HTTPSラッパー」としても使える、インフラを抽象的な絵で描けるようになった。</p>
+
+<h3>6-2. IAMアクセスキーの漏洩とローテーション</h3>
+<div class="warning-box">
+<strong>問題</strong>：動作確認のためスクリーンショットをClaude共有したが、その中に<strong>AWSアクセスキーが写り込んだ</strong>。チャットログにキーが残ってしまった。
+</div>
+<div class="success-box">
+<strong>気づいた瞬間の対応</strong>：
+<ol style="margin-top:8px;">
+  <li>キーが漏れた前提で<strong>即座に無効化・新規発行</strong>を実施</li>
+  <li>全ての参照箇所（ローカル.env、EC2 .env）を新キーに書き換え</li>
+  <li>疎通テストして新キーで動作することを確認</li>
+  <li><strong>古いキーを削除</strong>して漏洩キーを無効化</li>
+</ol>
+</div>
+<p><strong>学んだこと</strong>：<strong>セキュリティは「事後対応の速さ」も重要</strong>、スクリーンショット共有時は機密情報を確認する習慣、キーローテーションはいざという時のための訓練、本番運用ではIAMロール（キー不要）を使うべき。</p>
+
+<h3>6-3. EC2再起動でIPが変わる問題</h3>
+<div class="warning-box">
+<strong>問題</strong>：AWSクレジット節約のため作業終了時にEC2を停止していたが、<strong>再起動時にパブリックIPが変わる</strong> → CloudFrontのオリジンを毎回手動更新。手間もミスも多かった。
+</div>
+<div class="success-box">
+<strong>解決策</strong>：<strong>Elastic IP</strong>を導入して固定IPを取得。一度だけCloudFrontのオリジンを更新すれば以降変更不要。コスト増：停止中でも月$3.60（許容範囲）。
+</div>
+<p><strong>学んだこと</strong>：インフラの「運用のしやすさ」もコストの一部、トレードオフを数字で判断する感覚、何度も繰り返す作業は自動化・固定化するべき。</p>
+
+<h3>6-4. デプロイの落とし穴：git pullが黙って失敗していた</h3>
+<div class="warning-box">
+<strong>問題</strong>：修正コードを本番反映したが動作しない。キャッシュクリアもした。実は<strong>EC2側のgit pullが認証エラーで失敗していたのに気付いていなかった</strong>。
+</div>
+<p><strong>症状</strong>：git pullコマンドは実行したがPAT入力を間違えていた。「Authentication failed」で終了したが、そのままPM2 restartもしていた。結果：古いコードのまま動いていた。</p>
+<div class="success-box">
+<strong>解決策</strong>：反映後は必ず <code>git log --oneline</code> で最新コミットを確認する習慣にした。コード変更が反映されているかは <code>grep</code> で確認する。
+</div>
+<p><strong>学んだこと</strong>：<strong>「コマンドを打つ」と「効果が出る」は別</strong>という当たり前を痛感。サイレント失敗はエンジニアの敵。<strong>確認・検証まで含めて「デプロイ完了」</strong>と定義するべき。</p>
+
+<h3>6-5. 未実装バグの発見</h3>
+<div class="warning-box">
+<strong>問題</strong>：手動テスト計画に沿って検証を進めていたら、「パスワード短さでエラー」「日付逆順でエラー」の項目が<strong>未実装</strong>だと判明。設計書にはあるが実装漏れていた。
+</div>
+<div class="success-box">
+<strong>対応</strong>：テスト計画上「未実装バグ」として明確に記録、発見当日にバックエンド＋フロントエンドの両方に実装、本番反映＆再検証まで完了。
+</div>
+<p><strong>学んだこと</strong>：<strong>設計と実装のギャップは必ず生まれる</strong> → 体系的なテストが重要。「動く」と「仕様通り」は違う。テスト工程は品質保証だけでなく <strong>仕様通りかの検証</strong> でもある。</p>
+
+<h3>6-6. AWSコスト意識</h3>
+<div class="warning-box">
+<strong>問題</strong>：AWS学習用に無料クレジット$140が付与されたが、そのままだと月$25消費で<strong>5-6ヶ月で枯渇</strong>。学習期間中は節約したかった。
+</div>
+<div class="success-box">
+<strong>工夫</strong>：作業終了時にEC2・RDSを停止する運用ポリシーを確立、「同日中に再開なら停止しない」など判断基準を作成、Elastic IPは「使いやすさと費用のトレードオフ」で判断、定期的にコストを確認する習慣。
+</div>
+<p><strong>結果</strong>：<strong>月$1未満で運用</strong>できている。クレジット消費を最小化して開発期間を延長。</p>
+<p><strong>学んだこと</strong>：クラウドは使い方次第で費用が大きく変わる、コスト最適化は「単に安くする」ではなく「トレードオフを理解して選ぶ」、実務でも重要になる感覚。</p>
+
+<div class="section-divider"></div>
+
+<h2 id="s7">7. プロジェクトの数値サマリー</h2>
+
+<h3>7-1. コード量</h3>
+<div class="metric-grid">
+  <div class="metric-card">
+    <div class="label">総コミット数</div>
+    <div class="value">24</div>
+  </div>
+  <div class="metric-card">
+    <div class="label">総コード行数</div>
+    <div class="value">約4,000<span class="unit">行</span></div>
+  </div>
+  <div class="metric-card">
+    <div class="label">バックエンド</div>
+    <div class="value">1,418<span class="unit">行 / 17ファイル</span></div>
+  </div>
+  <div class="metric-card">
+    <div class="label">フロントエンド</div>
+    <div class="value">2,587<span class="unit">行 / 20ファイル</span></div>
+  </div>
+</div>
+
+<h3>7-2. 実装した機能</h3>
+<div class="metric-grid">
+  <div class="metric-card">
+    <div class="label">REST APIエンドポイント</div>
+    <div class="value">16</div>
+  </div>
+  <div class="metric-card">
+    <div class="label">画面数</div>
+    <div class="value">8<span class="unit"> (S-01〜S-08)</span></div>
+  </div>
+  <div class="metric-card">
+    <div class="label">DBテーブル</div>
+    <div class="value">5</div>
+  </div>
+  <div class="metric-card">
+    <div class="label">ロール数</div>
+    <div class="value">3</div>
+  </div>
+</div>
+
+<h3>7-3. AWSリソース</h3>
+<table>
+  <tr><th>リソース</th><th>用途</th></tr>
+  <tr><td>EC2 t3.micro</td><td>バックエンドサーバー</td></tr>
+  <tr><td>RDS db.t3.micro</td><td>PostgreSQLデータベース</td></tr>
+  <tr><td>S3 バケット</td><td>フロント静的ファイル</td></tr>
+  <tr><td>CloudFront ディストリビューション × 2</td><td>フロント配信、API HTTPS化</td></tr>
+  <tr><td>SES</td><td>メール送信</td></tr>
+  <tr><td>Elastic IP</td><td>EC2 IP固定</td></tr>
+  <tr><td>IAMユーザー</td><td>SES送信用</td></tr>
+</table>
+
+<h3>7-4. 開発期間</h3>
+<table>
+  <tr><th>マイルストーン</th><th>日付</th></tr>
+  <tr><td>開始</td><td>2026年6月24日</td></tr>
+  <tr><td>主要機能完成</td><td>2026年7月2日</td></tr>
+  <tr><td>本番デプロイ完了</td><td>2026年7月2日</td></tr>
+  <tr><td>全機能テスト・改善完了</td><td>2026年7月11日</td></tr>
+  <tr><td>総日数</td><td><strong>約18日間</strong>（Claude Codeと対話しながら開発）</td></tr>
+</table>
+
+<div class="section-divider"></div>
+
+<h2 id="s8">8. 今後の課題・改善予定</h2>
+
+<h3>8-1. 短期（すぐやりたい）</h3>
+<ul>
+  <li><strong>独自ドメインの取得</strong>：<code>.com</code>や<code>.jp</code>ドメインを取得してブランディング</li>
+  <li><strong>SESの本番アクセス申請</strong>：Sandboxモード解除で一般ユーザーへの通知を可能に</li>
+  <li><strong>DKIM設定</strong>：メールが迷惑メール判定されないようにする</li>
+</ul>
+
+<h3>8-2. 中期（スキルアップに向けて）</h3>
+<ul>
+  <li><strong>TypeScript化</strong>：JavaScriptから型安全なTypeScriptへ書き換え</li>
+  <li><strong>自動テストの整備</strong>：Jestでバックエンド、Playwrightで E2E テスト</li>
+  <li><strong>GitHub Actions でCI/CD</strong>：コミットで自動テスト・自動デプロイ</li>
+</ul>
+
+<h3>8-3. 長期（本格的な運用）</h3>
+<ul>
+  <li><strong>Dockerコンテナ化</strong>：開発環境・本番環境を統一</li>
+  <li><strong>CloudWatch監視</strong>：EC2ダウン、エラー急増でメール通知</li>
+  <li><strong>エラー監視サービス導入</strong>：Sentryなどで本番エラーを自動収集</li>
+  <li><strong>RDSバックアップ設定の見直し</strong>：災害対策</li>
+</ul>
+
+<div class="section-divider"></div>
+
+<h2 id="s9">9. 開発の進め方（振り返り）</h2>
+
+<h3>9-1. 使ったAIツール</h3>
+<p><strong>Claude Code</strong>（Anthropic社のAIコーディングアシスタント）とペアプログラミング形式で開発しました。</p>
+
+<h4>活用の仕方</h4>
+<ul>
+  <li>各機能の設計相談</li>
+  <li>コードの雛形生成 → 自分で理解しながら調整</li>
+  <li>エラーの原因調査サポート</li>
+  <li>ドキュメント作成の支援</li>
+</ul>
+
+<h4>AIツールとの向き合い方</h4>
+<ul>
+  <li><strong>単なるコピペではなく「なぜそう書くか」を都度確認</strong></li>
+  <li>提案されたコードは自分で読んで理解してから採用</li>
+  <li>意図しない挙動は追加で質問して掘り下げ</li>
+</ul>
+
+<h3>9-2. 開発フェーズと振り返り</h3>
+<table>
+  <tr><th>フェーズ</th><th>日数</th><th>内容</th><th>学び</th></tr>
+  <tr><td>1. 土台作り</td><td>Day 1-3</td><td>Express + PostgreSQL の環境構築、DB接続</td><td>環境構築だけで意外と詰まる</td></tr>
+  <tr><td>2. API実装</td><td>Day 3-7</td><td>認証（JWT + bcrypt）、現場・工程CRUD</td><td>ミドルウェアパターンの理解</td></tr>
+  <tr><td>3. フロント実装</td><td>Day 7-10</td><td>React + Tailwind で画面構築、API接続</td><td>state管理の考え方</td></tr>
+  <tr><td>4. バッチ・通知</td><td>Day 10-12</td><td>遅延判定バッチの実装</td><td>非同期処理の順序制御</td></tr>
+  <tr><td>5. AWS本番デプロイ</td><td>Day 12-14</td><td>EC2/RDS/S3/CloudFront の構築、Mixed Content対策</td><td>ローカルと本番の違い</td></tr>
+  <tr><td>6. テスト・改善</td><td>Day 14-18</td><td>体系的な手動テスト、バグ発見・修正、SES統合</td><td>品質保証の重要性</td></tr>
+</table>
+
+<h3>9-3. 失敗と学び</h3>
+<ul>
+  <li><strong>アクセスキーを画面に写した</strong> → セキュリティ意識の向上</li>
+  <li><strong>git pull認証エラーを見落とした</strong> → 確認習慣の重要性</li>
+  <li><strong>設計書と実装のギャップ</strong> → テストの必要性</li>
+  <li><strong>キャッシュに悩まされた</strong> → 「見えないもの」の存在の理解</li>
+</ul>
+
+<div class="section-divider"></div>
+
+<h2 id="s10">10. 付録：主なコミット履歴</h2>
+<p>時系列順に主要なコミットを抜粋しています。</p>
+
+<pre><code>2026-06-24  446afae  feat: 初回コミット - Expressサーバーの基本設定
+2026-06-25  1935149  feat: DBセットアップ・テーブル作成・Node.js接続完了
+2026-06-26  2f0f7b0  feat: 認証API実装完了（register・login・me）
+2026-06-27  241a188  feat: 現場管理API実装完了 (projects CRUD)
+2026-06-28  0b46e46  feat: フロントエンド実装完了（React・ログイン・現場CRUD）
+2026-06-29  1a68d1d  feat: デザイン改善・タスク管理機能追加
+2026-06-30  7554597  feat: 設計書準拠リビルド＋主要4画面実装
+2026-07-01  ba093c7  feat: Phase 5-A 遅延判定バッチ実装
+2026-07-02  5fbd272  fix: CORS設定をCloudFrontドメイン向けに更新
+2026-07-02  712ccdc  fix: RDS接続用にSSL設定を追加
+2026-07-02  7e60c43  fix: CORS設定にlocalhost:3000を追加
+2026-07-05  db828ad  feat: 権限別UI改善と401自動リダイレクト機能追加
+2026-07-08  97d1e5b  feat: 現場メンバー管理API・UI実装
+2026-07-08  442c9a7  docs: 課題2（メンバー管理UI）の実装・本番反映を記録
+2026-07-08  6d77abf  chore: SSHキー(*.pem)を.gitignoreに追加
+2026-07-09  0574e80  feat: AWS SES経由の遅延通知メール送信を実装
+2026-07-09  0bd791a  docs: Phase 5-B（SESメール通知）の実装・本番反映を記録
+2026-07-10  284a138  docs: 赤セクションの追加テスト結果を記録
+2026-07-10  f8a7219  fix: パスワード最小長バリデーション（8文字以上）を追加
+2026-07-10  9998d32  docs: 黄セクション（バリデーション）のテスト結果を記録
+2026-07-11  a0225e8  docs: Elastic IP導入の記録
+2026-07-11  c4d68f3  fix: 工程の予定完了日<予定開始日を拒否するバリデーションを追加
+2026-07-11  96eaed9  docs: 日付逆順バリデーション実装とElastic IP導入を記録
+2026-07-11  38dc85c  docs: 緑セクション（認証UX）のテスト結果を記録</code></pre>
+
+<div class="footer">
+  <p>💼 <strong>GitHub</strong>: <a href="https://github.com/yurararaa2u1-blip">github.com/yurararaa2u1-blip</a></p>
+  <p>📁 <strong>リポジトリ</strong>: <a href="https://github.com/yurararaa2u1-blip/construction-app">github.com/yurararaa2u1-blip/construction-app</a></p>
+  <p style="margin-top:16px;">このドキュメントは Claude Code の支援を受けて作成されました。技術的な詳細は <code>docs/</code> 配下の設計書もあわせてご参照ください。</p>
+</div>
+
+</div>
+</body>
+</html>
