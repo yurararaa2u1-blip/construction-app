@@ -341,7 +341,7 @@
   <tr><td>期待結果</td><td>タスクがガントチャートに追加される</td></tr>
 </table>
 <div class="step"><span class="checkbox checkbox-pass">✓</span>タスクを複数作成できる<span class="step-note">基礎工事/配管工事/内装工事/屋根工事の4件で確認</span></div>
-<div class="step"><span class="checkbox checkbox-code">C</span>予定終了日が予定開始日より前の場合エラー<span class="step-note">2026-07-10 検証。バリデーション未実装のバグを発見（planned_end&lt;planned_startでも作成できる）。優先度低のため後日対応予定として記録</span></div>
+<div class="step"><span class="checkbox checkbox-pass">✓</span>予定終了日が予定開始日より前の場合エラー<span class="step-note">2026-07-10 未実装バグを発見→2026-07-11 実装＆本番反映（backend: createTask/updateTaskで検証、frontend: handleAddTaskで送信前検証）。フロント/バックエンド両方で拒否される動作を確認</span></div>
 
 <h3>4.2 タスク一覧表示</h3>
 <div class="step"><span class="checkbox checkbox-pass">✓</span>作成したタスクが一覧・ガントチャートに表示される</div>
@@ -651,6 +651,15 @@
     <td>0件</td>
     <td>黄セクション（バリデーション）を検証。パスワード短さバリデーションの未実装バグを発見→実装＆本番反映＆再検証で合格。必須項目未入力はHTML5+バックエンドで合格。日付逆順は未実装バグとして記録（後日対応）</td>
   </tr>
+  <tr>
+    <td>2026/7/11</td>
+    <td>ゆら</td>
+    <td class="result-pass">1件</td>
+    <td>-</td>
+    <td>-</td>
+    <td>0件</td>
+    <td>Elastic IP導入でEC2 IP固定化。日付逆順バリデーション（残バグ）を実装＆本番反映＆合格</td>
+  </tr>
 </table>
 
 <h2>次回のテストで確認する項目</h2>
@@ -666,7 +675,7 @@
 </ol>
 
 <div class="note" style="margin-top:30px;">
-  ※本ドキュメントはClaude Codeにより自動生成されました（2026年7月2日作成 / 2026年7月3日・7月5日・7月7日・7月8日・7月9日・7月10日結果追記）
+  ※本ドキュメントはClaude Codeにより自動生成されました（2026年7月2日作成 / 2026年7月3日・7月5日・7月7日・7月8日・7月9日・7月10日・7月11日結果追記）
 </div>
 
 </body>
