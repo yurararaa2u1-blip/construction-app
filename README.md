@@ -1,5 +1,3 @@
-asuru 
-
 # 建築工事工程管理システム
 
 > 建築工事現場の「進捗管理」と「遅延通知」をブラウザとメールでできるWebアプリ
@@ -117,7 +115,7 @@ npm start
 
 ## 👤 作者
 
-**ryuunennsakura**
+
 - GitHub: [@yurararaa2u1-blip](https://github.com/yurararaa2u1-blip)
 
 ---
