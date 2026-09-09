@@ -1,6 +1,12 @@
 # 環境変数ファイル（パスワード・APIキーなどの秘密情報）
 # 絶対にGitHubにアップしてはいけない
-.env
+# .env / .env.production / .env.aws.bak など、.env で始まる全ファイルを除外
+.env*
+
+# ただし、サンプルファイル（値が入っていないテンプレート）はコミットしてよい
+!.env.example
+!.env.sample
+!.env.template
 
 # Node.jsのパッケージフォルダ
 # 容量が大きいため除外する（npm installで再作成できるため不要）
