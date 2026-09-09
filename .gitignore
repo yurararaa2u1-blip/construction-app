@@ -25,3 +25,5 @@ npm-debug.log*
 # SSHキーペア（EC2接続用の秘密鍵）
 # 絶対にGitHubにアップしてはいけない
 *.pem
+.claude/
+backend/seed_local.js
